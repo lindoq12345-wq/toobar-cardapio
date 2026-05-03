@@ -1,10 +1,19 @@
 # Toobar Full Stack
 
-Sistema full stack para barzinho com cardapio digital, autenticacao de usuarios, pedidos e banco de dados SQLite.
+Sistema full stack gratuito e local para barzinho com cardapio digital, autenticacao de usuarios, pedidos e banco de dados SQLite.
+
+## Gratuito e local
+
+- Nao precisa de hospedagem paga para rodar na sua maquina.
+- Nao usa CDN, Google Fonts, Unsplash, banco externo ou SaaS.
+- O backend roda em Python local.
+- O banco fica em `data/toobar.sqlite3`.
+- A interface conversa com `http://127.0.0.1:8000`.
+- As imagens do cardapio sao servidas pelo proprio backend.
 
 ## Arquitetura
 
-- `index.html`: frontend responsivo em HTML, CSS e JavaScript.
+- `index.html`: frontend responsivo em HTML, CSS e JavaScript, sem dependencias externas.
 - `server.py`: servidor HTTP, arquivos estaticos e API REST.
 - `toobar/database.py`: schema SQLite, migracoes e seed do cardapio.
 - `toobar/security.py`: hash de senha com PBKDF2 e geracao de tokens.
@@ -16,6 +25,7 @@ Sistema full stack para barzinho com cardapio digital, autenticacao de usuarios,
 - Cadastro e login de usuarios.
 - Cookie de sessao `HttpOnly` com validade de 7 dias.
 - Cardapio persistido no SQLite e carregado via `/api/menu`.
+- Assets locais/offline servidos via `/api/assets/menu/*.svg`.
 - Pedido autenticado via `/api/orders`.
 - Historico de pedidos do usuario logado.
 - Testes de cadastro, login, menu, autenticacao e pedidos.
@@ -76,4 +86,3 @@ C:\Users\Lindomar\.cache\codex-runtimes\codex-primary-runtime\dependencies\pytho
 - Deploy com HTTPS para proteger cookies e trafego.
 - Rate limit e logs estruturados.
 - Separar frontend em build moderno se o projeto crescer.
-

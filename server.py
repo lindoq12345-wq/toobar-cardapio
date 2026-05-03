@@ -15,6 +15,13 @@ ROOT = Path(__file__).parent
 DB_PATH = Path(os.environ.get("TOOBAR_DB_PATH", ROOT / "data" / "toobar.sqlite3"))
 SERVICE = ToobarService(DB_PATH)
 
+LOCAL_MENU_ASSETS = {
+    "petiscos": ("#d7332a", "#efb23e", "PETISCO"),
+    "pratos": ("#2d8d69", "#f2c879", "PRATO"),
+    "drinks": ("#27313d", "#d7332a", "DRINK"),
+    "bebidas": ("#efb23e", "#27313d", "GELADA"),
+}
+
 
 class ToobarHandler(SimpleHTTPRequestHandler):
     server_version = "ToobarHTTP/1.0"
@@ -42,6 +49,8 @@ class ToobarHandler(SimpleHTTPRequestHandler):
         try:
             if parsed.path == "/api/health":
                 self.send_json({"status": "ok", "service": "toobar"})
+            elif parsed.path.startswith("/api/assets/menu/"):
+                self.send_menu_asset(parsed.path)
             elif parsed.path == "/api/menu":
                 category = parse_qs(parsed.query).get("category", [None])[0]
                 self.send_json({"items": SERVICE.menu(category)})
@@ -53,6 +62,26 @@ class ToobarHandler(SimpleHTTPRequestHandler):
                 raise AppError("Rota nao encontrada.", 404)
         except AppError as exc:
             self.send_error_json(exc.message, exc.status)
+
+    def send_menu_asset(self, path: str) -> None:
+        name = Path(path).stem
+        primary, accent, label = LOCAL_MENU_ASSETS.get(name, LOCAL_MENU_ASSETS["petiscos"])
+        svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="480" height="560" viewBox="0 0 480 560">
+<rect width="480" height="560" fill="{primary}"/>
+<circle cx="380" cy="118" r="112" fill="{accent}" opacity=".82"/>
+<circle cx="98" cy="438" r="132" fill="#fff8ec" opacity=".2"/>
+<rect x="86" y="178" width="308" height="214" rx="22" fill="#fff8ec" opacity=".95"/>
+<rect x="128" y="222" width="224" height="28" rx="14" fill="{primary}" opacity=".26"/>
+<rect x="128" y="270" width="224" height="28" rx="14" fill="{primary}" opacity=".26"/>
+<rect x="128" y="318" width="150" height="28" rx="14" fill="{primary}" opacity=".26"/>
+<text x="240" y="474" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" font-weight="800" fill="#fff8ec">{label}</text>
+</svg>""".encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "image/svg+xml; charset=utf-8")
+        self.send_header("Content-Length", str(len(svg)))
+        self.send_header("Cache-Control", "public, max-age=86400")
+        self.end_headers()
+        self.wfile.write(svg)
 
     def handle_api_post(self, parsed) -> None:
         try:
@@ -124,4 +153,3 @@ def run(host: str = "127.0.0.1", port: int = 8000) -> None:
 
 if __name__ == "__main__":
     run(port=int(os.environ.get("PORT", "8000")))
-

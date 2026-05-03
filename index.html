@@ -4,9 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Toobar | Full Stack Bar</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --ink: #1c1c20;
@@ -26,7 +23,7 @@
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ink);
       background: var(--paper);
     }
@@ -116,13 +113,16 @@
     .button.ghost { border: 1px solid rgba(255,255,255,.3); background: transparent; color: #fff; }
 
     .hero {
+      position: relative;
       min-height: calc(100vh - 72px);
       display: grid;
       align-items: end;
       color: #fff;
       background:
-        linear-gradient(90deg, rgba(18,18,20,.88), rgba(18,18,20,.58) 48%, rgba(18,18,20,.18)),
-        url("https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1800&q=82") center / cover;
+        radial-gradient(circle at 78% 28%, rgba(239,178,62,.46) 0 12%, transparent 13%),
+        radial-gradient(circle at 66% 62%, rgba(215,51,42,.38) 0 11%, transparent 12%),
+        linear-gradient(90deg, rgba(18,18,20,.94), rgba(18,18,20,.72) 48%, rgba(18,18,20,.42)),
+        repeating-linear-gradient(115deg, #3a2521 0 18px, #1d1d21 18px 36px);
     }
 
     .hero-inner, .section {
@@ -163,6 +163,29 @@
       color: rgba(255,255,255,.84);
       font-size: clamp(17px, 2vw, 21px);
       line-height: 1.6;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: min(8vw, 110px);
+      bottom: 68px;
+      width: min(34vw, 360px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255,255,255,.95) 0 12%, transparent 13%),
+        radial-gradient(circle at 50% 56%, rgba(239,178,62,.92) 0 28%, transparent 29%),
+        linear-gradient(#f3d083 0 0) 50% 62% / 46% 44% no-repeat;
+      border: 14px solid rgba(255,255,255,.16);
+      box-shadow: inset 0 -34px 0 rgba(0,0,0,.2), 0 30px 80px rgba(0,0,0,.32);
+      opacity: .78;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
     }
 
     .hero-actions {
@@ -478,9 +501,11 @@
       .hero {
         min-height: 740px;
         background:
-          linear-gradient(180deg, rgba(18,18,20,.42), rgba(18,18,20,.9)),
-          url("https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1200&q=82") center / cover;
+          radial-gradient(circle at 78% 24%, rgba(239,178,62,.42) 0 12%, transparent 13%),
+          linear-gradient(180deg, rgba(18,18,20,.68), rgba(18,18,20,.95)),
+          repeating-linear-gradient(115deg, #3a2521 0 18px, #1d1d21 18px 36px);
       }
+      .hero::after { opacity: .36; right: 18px; bottom: 36px; width: 280px; }
       .section-head, .auth-grid, .menu-shell { display: grid; grid-template-columns: 1fr; }
       .stack-grid, .menu-grid { grid-template-columns: 1fr 1fr; }
       .order-panel { position: static; }
@@ -527,7 +552,7 @@
       <div class="hero-inner">
         <span class="eyebrow">Sistema full stack para bar</span>
         <h1>Venha tomar no Toobar</h1>
-        <p>Cardapio digital com autenticação de usuarios, pedidos persistidos em banco SQLite e APIs para evoluir para cozinha, caixa, delivery e painel administrativo.</p>
+        <p>Cardapio digital gratuito, local e sem dependencias pagas: usuarios, pedidos e dados ficam no seu computador com SQLite.</p>
         <div class="hero-actions">
           <a class="button primary" href="#acesso">Entrar ou cadastrar</a>
           <a class="button gold" href="#cardapio">Ver cardapio</a>
@@ -541,12 +566,12 @@
           <span class="eyebrow" style="color: var(--brand-dark);">Engenharia</span>
           <h2 class="section-title" id="arquiteturaTitle">Base pronta para crescer</h2>
         </div>
-        <p class="section-copy">A aplicacao agora tem separacao entre interface, API, regras de negocio, seguranca, banco de dados e testes automatizados.</p>
+        <p class="section-copy">A aplicacao roda localmente: interface, API, regras de negocio, seguranca, banco de dados e testes automatizados no mesmo projeto.</p>
       </div>
       <div class="stack-grid">
-        <article class="stack-card"><strong>Frontend</strong><span>HTML, CSS e JavaScript consumindo APIs reais do backend.</span></article>
-        <article class="stack-card"><strong>Backend</strong><span>Servidor HTTP com rotas REST para auth, menu, pedidos e saude.</span></article>
-        <article class="stack-card"><strong>Banco</strong><span>SQLite com usuarios, sessoes, cardapio, pedidos e itens.</span></article>
+        <article class="stack-card"><strong>Frontend local</strong><span>HTML, CSS e JavaScript sem CDN, fonte externa ou build pago.</span></article>
+        <article class="stack-card"><strong>Backend local</strong><span>Servidor Python com rotas REST para auth, menu, pedidos e saude.</span></article>
+        <article class="stack-card"><strong>Banco gratis</strong><span>SQLite com usuarios, sessoes, cardapio, pedidos e itens.</span></article>
         <article class="stack-card"><strong>Qualidade</strong><span>Testes unitarios cobrindo cadastro, login, menu e pedidos.</span></article>
       </div>
     </section>

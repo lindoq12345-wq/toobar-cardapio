@@ -3,14 +3,14 @@ from pathlib import Path
 
 
 MENU_SEED = [
-    ("Bolinho de costela", "Costela desfiada, queijo meia cura e molho da casa.", 34.90, "petiscos", "https://images.unsplash.com/photo-1625938146369-adc83368b2f7?auto=format&fit=crop&w=500&q=80"),
-    ("Batata brava", "Fritas crocantes, paprika, aioli e cheiro verde.", 29.90, "petiscos", "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&w=500&q=80"),
-    ("Isca de peixe", "Tirinhas empanadas com limao siciliano e tartaro.", 42.90, "petiscos", "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=500&q=80"),
-    ("Burger Toobar", "Blend 160g, queijo, bacon, picles e maionese defumada.", 39.90, "pratos", "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80"),
-    ("Parmegiana da casa", "File alto, molho rustico, mussarela e arroz branco.", 54.90, "pratos", "https://images.unsplash.com/photo-1633436374961-09b92742047b?auto=format&fit=crop&w=500&q=80"),
-    ("Caipirinha tropical", "Limao, maracuja, cachaca premium e acucar na medida.", 24.90, "drinks", "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=500&q=80"),
-    ("Gin botanico", "Gin, tonica, alecrim, zimbro e rodela de laranja.", 32.90, "drinks", "https://images.unsplash.com/photo-1560508179-b2c9a3f8e92b?auto=format&fit=crop&w=500&q=80"),
-    ("Chopp pilsen", "Caneca 400ml, colarinho cremoso e temperatura ideal.", 13.90, "bebidas", "https://images.unsplash.com/photo-1608270586620-248524c67de9?auto=format&fit=crop&w=500&q=80"),
+    ("Bolinho de costela", "Costela desfiada, queijo meia cura e molho da casa.", 34.90, "petiscos", "/api/assets/menu/petiscos.svg"),
+    ("Batata brava", "Fritas crocantes, paprika, aioli e cheiro verde.", 29.90, "petiscos", "/api/assets/menu/petiscos.svg"),
+    ("Isca de peixe", "Tirinhas empanadas com limao siciliano e tartaro.", 42.90, "petiscos", "/api/assets/menu/petiscos.svg"),
+    ("Burger Toobar", "Blend 160g, queijo, bacon, picles e maionese defumada.", 39.90, "pratos", "/api/assets/menu/pratos.svg"),
+    ("Parmegiana da casa", "File alto, molho rustico, mussarela e arroz branco.", 54.90, "pratos", "/api/assets/menu/pratos.svg"),
+    ("Caipirinha tropical", "Limao, maracuja, cachaca premium e acucar na medida.", 24.90, "drinks", "/api/assets/menu/drinks.svg"),
+    ("Gin botanico", "Gin, tonica, alecrim, zimbro e rodela de laranja.", 32.90, "drinks", "/api/assets/menu/drinks.svg"),
+    ("Chopp pilsen", "Caneca 400ml, colarinho cremoso e temperatura ideal.", 13.90, "bebidas", "/api/assets/menu/bebidas.svg"),
 ]
 
 
@@ -81,6 +81,16 @@ def migrate(conn: sqlite3.Connection) -> None:
 def seed_menu(conn: sqlite3.Connection) -> None:
     total = conn.execute("SELECT COUNT(*) FROM menu_items").fetchone()[0]
     if total:
+        conn.executemany(
+            "UPDATE menu_items SET image_url = ? WHERE category = ?",
+            [
+                ("/api/assets/menu/petiscos.svg", "petiscos"),
+                ("/api/assets/menu/pratos.svg", "pratos"),
+                ("/api/assets/menu/drinks.svg", "drinks"),
+                ("/api/assets/menu/bebidas.svg", "bebidas"),
+            ],
+        )
+        conn.commit()
         return
 
     conn.executemany(
@@ -91,4 +101,3 @@ def seed_menu(conn: sqlite3.Connection) -> None:
         MENU_SEED,
     )
     conn.commit()
-
