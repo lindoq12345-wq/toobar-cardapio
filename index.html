@@ -3,59 +3,45 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Toobar | Menu e Pedidos</title>
+  <title>Toobar | Full Stack Bar</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink: #1d1d1f;
-      --muted: #68645f;
-      --paper: #fffaf1;
+      --ink: #1c1c20;
+      --muted: #67625b;
+      --paper: #fff8ec;
       --surface: #ffffff;
-      --line: #e8dfd0;
-      --brand: #d8342a;
-      --brand-dark: #9e201c;
-      --gold: #f0b541;
-      --mint: #2f8f6b;
-      --charcoal: #202125;
-      --shadow: 0 18px 50px rgba(44, 31, 20, .14);
+      --line: #e9ddcb;
+      --brand: #d7332a;
+      --brand-dark: #961f1a;
+      --gold: #efb23e;
+      --mint: #2d8d69;
+      --steel: #27313d;
+      --shadow: 0 18px 50px rgba(40, 26, 16, .14);
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ink);
       background: var(--paper);
     }
-
-    button,
-    input,
-    textarea {
-      font: inherit;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
 
     .topbar {
       position: sticky;
       top: 0;
       z-index: 20;
-      border-bottom: 1px solid rgba(255, 255, 255, .18);
-      background: rgba(32, 33, 37, .92);
+      background: rgba(28, 28, 32, .94);
       color: #fff;
-      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(14px);
     }
 
     .nav {
@@ -65,15 +51,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
+      gap: 18px;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 12px;
-      font-weight: 800;
-      letter-spacing: 0;
+      font-weight: 900;
     }
 
     .brand-mark {
@@ -83,85 +68,99 @@
       place-items: center;
       border-radius: 8px;
       background: var(--brand);
-      color: #fff;
-      box-shadow: inset 0 -8px 0 rgba(0, 0, 0, .12);
+      box-shadow: inset 0 -8px 0 rgba(0,0,0,.12);
     }
 
     .nav-links {
       display: flex;
       align-items: center;
       gap: 18px;
-      color: rgba(255, 255, 255, .82);
+      color: rgba(255,255,255,.78);
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
-    .nav-links a:hover {
-      color: #fff;
+    .session {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 190px;
+      justify-content: flex-end;
     }
 
-    .nav-action {
+    .session-name {
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: rgba(255,255,255,.78);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .button {
+      min-height: 44px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 42px;
+      gap: 8px;
       padding: 0 16px;
+      border: 0;
       border-radius: 8px;
-      background: var(--gold);
-      color: #2c2109;
-      font-weight: 800;
+      font-weight: 900;
     }
 
+    .button.primary { background: var(--brand); color: #fff; }
+    .button.gold { background: var(--gold); color: #2d2108; }
+    .button.dark { background: var(--steel); color: #fff; }
+    .button.ghost { border: 1px solid rgba(255,255,255,.3); background: transparent; color: #fff; }
+
     .hero {
-      position: relative;
       min-height: calc(100vh - 72px);
       display: grid;
       align-items: end;
-      overflow: hidden;
       color: #fff;
       background:
-        linear-gradient(90deg, rgba(17, 18, 21, .86), rgba(17, 18, 21, .58) 48%, rgba(17, 18, 21, .18)),
+        linear-gradient(90deg, rgba(18,18,20,.88), rgba(18,18,20,.58) 48%, rgba(18,18,20,.18)),
         url("https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1800&q=82") center / cover;
     }
 
-    .hero-inner {
+    .hero-inner, .section {
       width: min(1180px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 96px 0 92px;
     }
 
+    .hero-inner { padding: 96px 0 86px; }
     .eyebrow {
       display: inline-flex;
       align-items: center;
       gap: 10px;
       margin-bottom: 18px;
-      color: #ffe7ab;
-      font-size: 14px;
-      font-weight: 800;
-      text-transform: uppercase;
+      color: #ffe6a5;
+      font-size: 13px;
+      font-weight: 900;
       letter-spacing: .08em;
+      text-transform: uppercase;
     }
-
     .eyebrow::before {
       content: "";
-      width: 36px;
+      width: 34px;
       height: 3px;
       border-radius: 999px;
       background: var(--gold);
     }
 
     h1 {
-      width: min(720px, 100%);
+      width: min(820px, 100%);
       margin: 0;
-      font-size: clamp(44px, 8vw, 92px);
-      line-height: .96;
-      letter-spacing: 0;
+      font-size: clamp(44px, 8vw, 88px);
+      line-height: .98;
     }
 
     .hero p {
-      width: min(590px, 100%);
+      width: min(650px, 100%);
       margin: 22px 0 0;
-      color: rgba(255, 255, 255, .84);
+      color: rgba(255,255,255,.84);
       font-size: clamp(17px, 2vw, 21px);
       line-height: 1.6;
     }
@@ -170,43 +169,14 @@
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 34px;
+      margin-top: 32px;
     }
 
-    .button {
-      min-height: 50px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 0 20px;
-      border: 0;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 800;
-    }
-
-    .button.primary {
-      background: var(--brand);
-      color: #fff;
-    }
-
-    .button.secondary {
-      border: 1px solid rgba(255, 255, 255, .36);
-      background: rgba(255, 255, 255, .12);
-      color: #fff;
-    }
-
-    .section {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 76px 0;
-    }
-
+    .section { padding: 72px 0; }
     .section-head {
       display: flex;
-      align-items: end;
       justify-content: space-between;
+      align-items: end;
       gap: 24px;
       margin-bottom: 28px;
     }
@@ -215,53 +185,103 @@
       margin: 0;
       font-size: clamp(30px, 4vw, 48px);
       line-height: 1.04;
-      letter-spacing: 0;
     }
 
     .section-copy {
-      width: min(430px, 100%);
+      width: min(460px, 100%);
       margin: 0;
       color: var(--muted);
       line-height: 1.65;
     }
 
-    .highlights {
+    .stack-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 24px;
     }
 
-    .highlight {
-      min-height: 132px;
-      padding: 22px;
+    .stack-card, .auth-card, .item, .order-panel, .orders-panel {
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--surface);
-      box-shadow: 0 10px 30px rgba(44, 31, 20, .08);
+      box-shadow: 0 10px 30px rgba(40,26,16,.08);
     }
 
-    .highlight strong {
+    .stack-card {
+      min-height: 126px;
+      padding: 20px;
+    }
+
+    .stack-card strong {
       display: block;
       margin-bottom: 8px;
-      font-size: 18px;
+      font-size: 17px;
     }
 
-    .highlight span {
+    .stack-card span {
       color: var(--muted);
       line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .auth-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .auth-card {
+      padding: 22px;
+    }
+
+    .auth-card h3 {
+      margin: 0 0 16px;
+      font-size: 22px;
+    }
+
+    .form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .field input, .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      outline: 0;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .field textarea {
+      min-height: 78px;
+      resize: vertical;
     }
 
     .menu-shell {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 360px;
-      align-items: start;
+      grid-template-columns: minmax(0, 1fr) 380px;
       gap: 24px;
+      align-items: start;
     }
 
     .tabs {
       position: sticky;
       top: 88px;
-      z-index: 5;
+      z-index: 4;
       display: flex;
       gap: 8px;
       padding: 8px;
@@ -269,7 +289,7 @@
       overflow-x: auto;
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: rgba(255, 250, 241, .92);
+      background: rgba(255,248,236,.92);
       backdrop-filter: blur(14px);
     }
 
@@ -280,15 +300,11 @@
       border-radius: 7px;
       background: transparent;
       color: var(--muted);
-      cursor: pointer;
-      font-weight: 800;
+      font-weight: 900;
       white-space: nowrap;
     }
 
-    .tab.active {
-      background: var(--charcoal);
-      color: #fff;
-    }
+    .tab.active { background: var(--steel); color: #fff; }
 
     .menu-grid {
       display: grid;
@@ -298,19 +314,15 @@
 
     .item {
       display: grid;
-      grid-template-columns: 106px minmax(0, 1fr);
+      grid-template-columns: 108px minmax(0, 1fr);
       gap: 16px;
-      min-height: 156px;
+      min-height: 158px;
       padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--surface);
-      box-shadow: 0 10px 30px rgba(44, 31, 20, .08);
     }
 
     .item img {
-      width: 106px;
-      height: 132px;
+      width: 108px;
+      height: 134px;
       object-fit: cover;
       border-radius: 7px;
       background: #ddd;
@@ -338,11 +350,7 @@
       margin-top: 14px;
     }
 
-    .price {
-      color: var(--brand-dark);
-      font-weight: 900;
-    }
-
+    .price { color: var(--brand-dark); font-weight: 900; }
     .add {
       width: 40px;
       height: 40px;
@@ -352,49 +360,27 @@
       border-radius: 8px;
       background: var(--mint);
       color: #fff;
-      cursor: pointer;
       font-size: 24px;
+      font-weight: 800;
       line-height: 1;
-      font-weight: 700;
     }
 
     .order-panel {
       position: sticky;
       top: 88px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--surface);
-      box-shadow: var(--shadow);
       overflow: hidden;
     }
 
-    .order-head {
+    .panel-head {
       padding: 20px;
-      background: var(--charcoal);
+      background: var(--steel);
       color: #fff;
     }
 
-    .order-head h2 {
-      margin: 0 0 6px;
-      font-size: 22px;
-    }
-
-    .order-head span {
-      color: rgba(255, 255, 255, .72);
-      font-size: 14px;
-    }
-
-    .cart {
-      max-height: 350px;
-      overflow-y: auto;
-      padding: 14px 18px;
-    }
-
-    .empty {
-      margin: 8px 0;
-      color: var(--muted);
-      line-height: 1.5;
-    }
+    .panel-head h2 { margin: 0 0 6px; font-size: 22px; }
+    .panel-head span { color: rgba(255,255,255,.74); font-size: 14px; }
+    .cart { max-height: 340px; overflow-y: auto; padding: 14px 18px; }
+    .empty { margin: 8px 0; color: var(--muted); line-height: 1.5; }
 
     .cart-row {
       display: grid;
@@ -404,34 +390,17 @@
       border-bottom: 1px solid var(--line);
     }
 
-    .cart-row:last-child {
-      border-bottom: 0;
-    }
-
-    .cart-row strong {
-      display: block;
-      font-size: 14px;
-    }
-
-    .cart-row span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .qty {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
+    .cart-row:last-child { border-bottom: 0; }
+    .cart-row strong { display: block; font-size: 14px; }
+    .cart-row span { color: var(--muted); font-size: 13px; }
+    .qty { display: flex; align-items: center; gap: 8px; }
     .qty button {
       width: 28px;
       height: 28px;
       border: 1px solid var(--line);
       border-radius: 7px;
       background: #fff;
-      cursor: pointer;
-      font-weight: 800;
+      font-weight: 900;
     }
 
     .checkout {
@@ -439,113 +408,46 @@
       gap: 12px;
       padding: 18px;
       border-top: 1px solid var(--line);
-      background: #fff8ea;
-    }
-
-    .field {
-      display: grid;
-      gap: 6px;
-    }
-
-    .field label {
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .field input,
-    .field textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px;
-      background: #fff;
-      color: var(--ink);
-      outline: none;
-    }
-
-    .field textarea {
-      min-height: 72px;
-      resize: vertical;
+      background: #fff4df;
     }
 
     .total {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding-top: 4px;
-      font-weight: 900;
+      align-items: center;
       font-size: 20px;
-    }
-
-    .send {
-      width: 100%;
-      min-height: 50px;
-      border: 0;
-      border-radius: 8px;
-      background: var(--brand);
-      color: #fff;
-      cursor: pointer;
       font-weight: 900;
     }
 
-    .ambience {
-      display: grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 24px;
-      align-items: stretch;
+    .orders-panel {
+      padding: 20px;
     }
 
-    .ambience img {
-      width: 100%;
-      min-height: 380px;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-    }
-
-    .info {
-      display: grid;
-      align-content: center;
-      gap: 18px;
-      padding: 34px;
-      border-radius: 8px;
-      background: var(--charcoal);
-      color: #fff;
-    }
-
-    .info h2 {
-      margin: 0;
-      font-size: clamp(28px, 4vw, 44px);
-      line-height: 1.08;
-    }
-
-    .info p {
-      margin: 0;
-      color: rgba(255, 255, 255, .76);
-      line-height: 1.7;
-    }
-
-    .info-list {
+    .orders-list {
       display: grid;
       gap: 12px;
-      margin-top: 8px;
+      margin-top: 16px;
     }
 
-    .info-list div {
+    .order-card {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf8;
+    }
+
+    .order-card strong {
       display: flex;
       justify-content: space-between;
-      gap: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, .16);
+      gap: 12px;
+      margin-bottom: 8px;
     }
 
-    .footer {
-      padding: 32px 16px;
-      background: var(--charcoal);
-      color: rgba(255, 255, 255, .72);
-      text-align: center;
+    .order-card ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.5;
     }
 
     .toast {
@@ -553,113 +455,50 @@
       right: 18px;
       bottom: 18px;
       z-index: 50;
-      width: min(360px, calc(100% - 36px));
+      width: min(390px, calc(100% - 36px));
       padding: 16px;
       border-radius: 8px;
-      background: var(--charcoal);
+      background: var(--steel);
       color: #fff;
       box-shadow: var(--shadow);
       transform: translateY(130%);
-      transition: transform .28s ease;
+      transition: transform .25s ease;
     }
 
-    .toast.show {
-      transform: translateY(0);
+    .toast.show { transform: translateY(0); }
+    .footer {
+      padding: 32px 16px;
+      background: var(--steel);
+      color: rgba(255,255,255,.72);
+      text-align: center;
     }
 
     @media (max-width: 980px) {
-      .nav-links {
-        display: none;
-      }
-
+      .nav-links { display: none; }
       .hero {
-        min-height: 760px;
+        min-height: 740px;
         background:
-          linear-gradient(180deg, rgba(17, 18, 21, .42), rgba(17, 18, 21, .88)),
+          linear-gradient(180deg, rgba(18,18,20,.42), rgba(18,18,20,.9)),
           url("https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1200&q=82") center / cover;
       }
-
-      .section-head,
-      .ambience,
-      .menu-shell {
-        grid-template-columns: 1fr;
-      }
-
-      .section-head {
-        display: grid;
-      }
-
-      .highlights,
-      .menu-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .order-panel {
-        position: static;
-      }
+      .section-head, .auth-grid, .menu-shell { display: grid; grid-template-columns: 1fr; }
+      .stack-grid, .menu-grid { grid-template-columns: 1fr 1fr; }
+      .order-panel { position: static; }
     }
 
-    @media (max-width: 620px) {
-      .nav {
-        width: min(100% - 24px, 1180px);
-        min-height: 64px;
-      }
-
-      .brand span {
-        max-width: 132px;
-      }
-
-      .nav-action {
-        min-height: 38px;
-        padding: 0 12px;
-        font-size: 13px;
-      }
-
-      .hero {
-        min-height: 690px;
-      }
-
-      .hero-inner {
-        width: min(100% - 24px, 1180px);
-        padding: 80px 0 58px;
-      }
-
-      .hero-actions {
-        display: grid;
-      }
-
-      .section {
-        width: min(100% - 24px, 1180px);
-        padding: 54px 0;
-      }
-
-      .item {
-        grid-template-columns: 92px minmax(0, 1fr);
-        gap: 12px;
-      }
-
-      .item img {
-        width: 92px;
-        height: 126px;
-      }
-
-      .item h3 {
-        font-size: 16px;
-      }
-
-      .item p {
-        min-height: auto;
-        font-size: 13px;
-      }
-
-      .info {
-        padding: 24px;
-      }
-
-      .info-list div {
-        display: grid;
-        gap: 4px;
-      }
+    @media (max-width: 640px) {
+      .nav { width: min(100% - 24px, 1180px); min-height: 64px; }
+      .brand-mark { width: 38px; height: 38px; }
+      .session { min-width: auto; }
+      .session-name { display: none; }
+      .hero-inner, .section { width: min(100% - 24px, 1180px); }
+      .hero-inner { padding: 78px 0 58px; }
+      .hero-actions { display: grid; }
+      .section { padding: 54px 0; }
+      .stack-grid, .menu-grid { grid-template-columns: 1fr; }
+      .item { grid-template-columns: 92px minmax(0, 1fr); gap: 12px; }
+      .item img { width: 92px; height: 126px; }
+      .item p { min-height: auto; }
     }
   </style>
 </head>
@@ -667,63 +506,87 @@
   <header class="topbar">
     <nav class="nav" aria-label="Navegacao principal">
       <a class="brand" href="#inicio" aria-label="Toobar">
-        <span class="brand-mark">BA</span>
+        <span class="brand-mark">TB</span>
         <span>Toobar</span>
       </a>
       <div class="nav-links">
+        <a href="#arquitetura">Arquitetura</a>
+        <a href="#acesso">Usuarios</a>
         <a href="#cardapio">Cardapio</a>
         <a href="#pedidos">Pedidos</a>
-        <a href="#ambiente">Ambiente</a>
-        <a href="#contato">Contato</a>
       </div>
-      <a class="nav-action" href="#pedidos">Pedir agora</a>
+      <div class="session">
+        <span class="session-name" id="sessionName">Visitante</span>
+        <button class="button ghost" id="logoutButton" type="button" hidden>Sair</button>
+      </div>
     </nav>
   </header>
 
   <main id="inicio">
     <section class="hero">
       <div class="hero-inner">
-        <span class="eyebrow">Happy hour todos os dias</span>
+        <span class="eyebrow">Sistema full stack para bar</span>
         <h1>Venha tomar no Toobar</h1>
-        <p>Petiscos bem servidos, drinks autorais e aquele clima de mesa cheia para pedir sem pressa.</p>
+        <p>Cardapio digital com autenticação de usuarios, pedidos persistidos em banco SQLite e APIs para evoluir para cozinha, caixa, delivery e painel administrativo.</p>
         <div class="hero-actions">
-          <a class="button primary" href="#cardapio">Ver cardapio</a>
-          <a class="button secondary" href="#pedidos">Montar pedido</a>
+          <a class="button primary" href="#acesso">Entrar ou cadastrar</a>
+          <a class="button gold" href="#cardapio">Ver cardapio</a>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="destaques-title">
+    <section class="section" id="arquitetura" aria-labelledby="arquiteturaTitle">
       <div class="section-head">
         <div>
-          <span class="eyebrow" style="color: var(--brand-dark);">Especialidades</span>
-          <h2 class="section-title" id="destaques-title">O que sai mais da cozinha</h2>
+          <span class="eyebrow" style="color: var(--brand-dark);">Engenharia</span>
+          <h2 class="section-title" id="arquiteturaTitle">Base pronta para crescer</h2>
         </div>
-        <p class="section-copy">Combos para compartilhar, cerveja no ponto certo e pratos de bar com apresentacao caprichada.</p>
+        <p class="section-copy">A aplicacao agora tem separacao entre interface, API, regras de negocio, seguranca, banco de dados e testes automatizados.</p>
       </div>
-      <div class="highlights">
-        <article class="highlight">
-          <strong>Petiscos para dividir</strong>
-          <span>Porcoes generosas de fritas, bolinhos, pasteis e carnes aceboladas.</span>
+      <div class="stack-grid">
+        <article class="stack-card"><strong>Frontend</strong><span>HTML, CSS e JavaScript consumindo APIs reais do backend.</span></article>
+        <article class="stack-card"><strong>Backend</strong><span>Servidor HTTP com rotas REST para auth, menu, pedidos e saude.</span></article>
+        <article class="stack-card"><strong>Banco</strong><span>SQLite com usuarios, sessoes, cardapio, pedidos e itens.</span></article>
+        <article class="stack-card"><strong>Qualidade</strong><span>Testes unitarios cobrindo cadastro, login, menu e pedidos.</span></article>
+      </div>
+    </section>
+
+    <section class="section" id="acesso" aria-labelledby="acessoTitle">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow" style="color: var(--brand-dark);">Usuarios</span>
+          <h2 class="section-title" id="acessoTitle">Autenticacao</h2>
+        </div>
+        <p class="section-copy">Para enviar pedido, o cliente entra ou cria uma conta. A sessao fica em cookie HttpOnly no backend.</p>
+      </div>
+      <div class="auth-grid">
+        <article class="auth-card">
+          <h3>Criar conta</h3>
+          <form class="form" id="registerForm">
+            <div class="field"><label for="registerName">Nome</label><input id="registerName" autocomplete="name" placeholder="Ex.: Ana"></div>
+            <div class="field"><label for="registerEmail">Email</label><input id="registerEmail" type="email" autocomplete="email" placeholder="ana@email.com"></div>
+            <div class="field"><label for="registerPassword">Senha</label><input id="registerPassword" type="password" autocomplete="new-password" placeholder="Minimo 6 caracteres"></div>
+            <button class="button primary" type="submit">Cadastrar</button>
+          </form>
         </article>
-        <article class="highlight">
-          <strong>Drinks e cervejas</strong>
-          <span>Caipirinhas, gin tonicas, cerveja artesanal e long neck sempre gelada.</span>
-        </article>
-        <article class="highlight">
-          <strong>Pedidos na mesa</strong>
-          <span>Escolha os itens, informe sua mesa e envie o pedido direto pelo site.</span>
+        <article class="auth-card">
+          <h3>Entrar</h3>
+          <form class="form" id="loginForm">
+            <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" autocomplete="email" placeholder="ana@email.com"></div>
+            <div class="field"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Sua senha"></div>
+            <button class="button dark" type="submit">Entrar</button>
+          </form>
         </article>
       </div>
     </section>
 
-    <section class="section" id="cardapio" aria-labelledby="cardapio-title">
+    <section class="section" id="cardapio" aria-labelledby="cardapioTitle">
       <div class="section-head">
         <div>
-          <span class="eyebrow" style="color: var(--brand-dark);">Menu</span>
-          <h2 class="section-title" id="cardapio-title">Cardapio da casa</h2>
+          <span class="eyebrow" style="color: var(--brand-dark);">Menu + Pedidos</span>
+          <h2 class="section-title" id="cardapioTitle">Cardapio vindo do banco</h2>
         </div>
-        <p class="section-copy">Filtre por categoria e adicione ao pedido. Os valores podem ser conectados depois ao WhatsApp, delivery ou sistema interno.</p>
+        <p class="section-copy">Os produtos sao carregados via API. Ao enviar, o pedido e gravado com usuario, mesa, itens, quantidades e total.</p>
       </div>
 
       <div class="menu-shell" id="pedidos">
@@ -739,147 +602,103 @@
         </div>
 
         <aside class="order-panel" aria-label="Resumo do pedido">
-          <div class="order-head">
+          <div class="panel-head">
             <h2>Seu pedido</h2>
-            <span>Adicione os itens e envie para a equipe.</span>
+            <span>Login obrigatorio para gravar no banco.</span>
           </div>
-          <div class="cart" id="cart">
-            <p class="empty">Seu pedido ainda esta vazio.</p>
-          </div>
+          <div class="cart" id="cart"></div>
           <form class="checkout" id="orderForm">
-            <div class="field">
-              <label for="customer">Nome</label>
-              <input id="customer" name="customer" placeholder="Ex.: Ana" autocomplete="name">
-            </div>
-            <div class="field">
-              <label for="table">Mesa ou endereco</label>
-              <input id="table" name="table" placeholder="Ex.: Mesa 08">
-            </div>
-            <div class="field">
-              <label for="notes">Observacoes</label>
-              <textarea id="notes" name="notes" placeholder="Ex.: sem cebola, gelo separado"></textarea>
-            </div>
-            <div class="total">
-              <span>Total</span>
-              <strong id="total">R$ 0,00</strong>
-            </div>
-            <button class="send" type="submit">Enviar pedido</button>
+            <div class="field"><label for="tableLabel">Mesa ou endereco</label><input id="tableLabel" placeholder="Ex.: Mesa 08"></div>
+            <div class="field"><label for="notes">Observacoes</label><textarea id="notes" placeholder="Ex.: sem cebola, gelo separado"></textarea></div>
+            <div class="total"><span>Total</span><strong id="total">R$ 0,00</strong></div>
+            <button class="button primary" type="submit">Enviar pedido</button>
           </form>
         </aside>
       </div>
     </section>
 
-    <section class="section ambience" id="ambiente">
-      <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=82" alt="Balcao de bar com drinks e luz quente">
-      <div class="info">
-        <h2>Aberto para mesa, balcao e retirada.</h2>
-        <p>Musica boa, atendimento rapido e cozinha aberta ate tarde. Reserve para aniversarios, esquenta de show e encontros de turma.</p>
-        <div class="info-list" id="contato">
-          <div><strong>Horario</strong><span>Ter a dom, 17h as 01h</span></div>
-          <div><strong>Endereco</strong><span>Rua das Palmeiras, 128</span></div>
-          <div><strong>Telefone</strong><span>(11) 99999-0000</span></div>
+    <section class="section" aria-labelledby="historicoTitle">
+      <div class="orders-panel">
+        <div class="section-head" style="margin-bottom: 0;">
+          <div>
+            <span class="eyebrow" style="color: var(--brand-dark);">Banco de dados</span>
+            <h2 class="section-title" id="historicoTitle">Historico de pedidos</h2>
+          </div>
+          <button class="button dark" id="refreshOrders" type="button">Atualizar</button>
+        </div>
+        <div class="orders-list" id="ordersList">
+          <p class="empty">Entre para ver os pedidos gravados.</p>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    Toobar - cardapio digital e pedidos online.
-  </footer>
-
+  <footer class="footer">Toobar - arquitetura full stack com SQLite, autenticacao e testes.</footer>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
-    const items = [
-      {
-        id: 1,
-        name: "Bolinho de costela",
-        description: "Costela desfiada, queijo meia cura e molho da casa.",
-        price: 34.9,
-        category: "petiscos",
-        image: "https://images.unsplash.com/photo-1625938146369-adc83368b2f7?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        id: 2,
-        name: "Batata brava",
-        description: "Fritas crocantes, paprika, aioli e cheiro verde.",
-        price: 29.9,
-        category: "petiscos",
-        image: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        id: 3,
-        name: "Isca de peixe",
-        description: "Tirinhas empanadas com limao siciliano e tartaro.",
-        price: 42.9,
-        category: "petiscos",
-        image: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        id: 4,
-        name: "Burger Toobar",
-        description: "Blend 160g, queijo, bacon, picles e maionese defumada.",
-        price: 39.9,
-        category: "pratos",
-        image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        id: 5,
-        name: "Parmegiana da casa",
-        description: "File alto, molho rustico, mussarela e arroz branco.",
-        price: 54.9,
-        category: "pratos",
-        image: "https://images.unsplash.com/photo-1633436374961-09b92742047b?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        id: 6,
-        name: "Caipirinha tropical",
-        description: "Limao, maracuja, cachaca premium e acucar na medida.",
-        price: 24.9,
-        category: "drinks",
-        image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        id: 7,
-        name: "Gin botanico",
-        description: "Gin, tonica, alecrim, zimbro e rodela de laranja.",
-        price: 32.9,
-        category: "drinks",
-        image: "https://images.unsplash.com/photo-1560508179-b2c9a3f8e92b?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        id: 8,
-        name: "Chopp pilsen",
-        description: "Caneca 400ml, colarinho cremoso e temperatura ideal.",
-        price: 13.9,
-        category: "bebidas",
-        image: "https://images.unsplash.com/photo-1608270586620-248524c67de9?auto=format&fit=crop&w=500&q=80"
-      }
-    ];
-
     const state = {
+      user: null,
       category: "todos",
+      menu: [],
       cart: new Map()
     };
 
-    const formatter = new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL"
-    });
-
+    const formatter = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
     const menuGrid = document.querySelector("#menuGrid");
     const cart = document.querySelector("#cart");
     const total = document.querySelector("#total");
     const toast = document.querySelector("#toast");
+    const sessionName = document.querySelector("#sessionName");
+    const logoutButton = document.querySelector("#logoutButton");
+    const ordersList = document.querySelector("#ordersList");
+
+    async function api(path, options = {}) {
+      const response = await fetch(path, {
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+        ...options
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Erro inesperado.");
+      return data;
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 3200);
+    }
+
+    function renderSession() {
+      sessionName.textContent = state.user ? state.user.name : "Visitante";
+      logoutButton.hidden = !state.user;
+    }
+
+    async function loadSession() {
+      const data = await api("/api/me");
+      state.user = data.user;
+      renderSession();
+      await loadOrders();
+    }
+
+    async function loadMenu() {
+      const query = state.category === "todos" ? "" : `?category=${encodeURIComponent(state.category)}`;
+      const data = await api(`/api/menu${query}`);
+      state.menu = data.items;
+      renderMenu();
+    }
 
     function renderMenu() {
-      const filtered = state.category === "todos"
-        ? items
-        : items.filter((item) => item.category === state.category);
+      if (!state.menu.length) {
+        menuGrid.innerHTML = '<p class="empty">Nenhum item encontrado.</p>';
+        return;
+      }
 
-      menuGrid.innerHTML = filtered.map((item) => `
+      menuGrid.innerHTML = state.menu.map((item) => `
         <article class="item">
-          <img src="${item.image}" alt="${item.name}">
+          <img src="${item.image_url}" alt="${item.name}">
           <div>
             <h3>${item.name}</h3>
             <p>${item.description}</p>
@@ -908,7 +727,7 @@
               <strong>${item.name}</strong>
               <span>${formatter.format(item.price)} cada</span>
             </div>
-            <div class="qty" aria-label="Quantidade de ${item.name}">
+            <div class="qty">
               <button type="button" data-decrease="${item.id}">-</button>
               <strong>${qty}</strong>
               <button type="button" data-increase="${item.id}">+</button>
@@ -916,33 +735,44 @@
           </div>
         `;
       }).join("");
-
       total.textContent = formatter.format(sum);
     }
 
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add("show");
-      window.clearTimeout(showToast.timer);
-      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 3200);
+    async function loadOrders() {
+      if (!state.user) {
+        ordersList.innerHTML = '<p class="empty">Entre para ver os pedidos gravados.</p>';
+        return;
+      }
+
+      const data = await api("/api/orders");
+      if (!data.orders.length) {
+        ordersList.innerHTML = '<p class="empty">Nenhum pedido enviado ainda.</p>';
+        return;
+      }
+
+      ordersList.innerHTML = data.orders.map((order) => `
+        <article class="order-card">
+          <strong><span>Pedido #${order.id}</span><span>${formatter.format(order.total)}</span></strong>
+          <span>${order.table_label} - ${order.status}</span>
+          <ul>${order.items.map((item) => `<li>${item.quantity}x ${item.name}</li>`).join("")}</ul>
+        </article>
+      `).join("");
     }
 
-    document.querySelector(".tabs").addEventListener("click", (event) => {
+    document.querySelector(".tabs").addEventListener("click", async (event) => {
       const button = event.target.closest(".tab");
       if (!button) return;
-
       state.category = button.dataset.category;
       document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
       button.classList.add("active");
-      renderMenu();
+      await loadMenu();
     });
 
     menuGrid.addEventListener("click", (event) => {
       const button = event.target.closest("[data-id]");
       if (!button) return;
-
       const id = Number(button.dataset.id);
-      const item = items.find((entry) => entry.id === id);
+      const item = state.menu.find((entry) => entry.id === id);
       const current = state.cart.get(id);
       state.cart.set(id, { item, qty: current ? current.qty + 1 : 1 });
       renderCart();
@@ -954,37 +784,112 @@
       const decrease = event.target.closest("[data-decrease]");
       const id = Number(increase?.dataset.increase || decrease?.dataset.decrease || 0);
       if (!id) return;
-
       const current = state.cart.get(id);
       if (!current) return;
-
-      if (increase) {
-        current.qty += 1;
-      } else if (current.qty > 1) {
-        current.qty -= 1;
-      } else {
-        state.cart.delete(id);
-      }
-
+      if (increase) current.qty += 1;
+      else if (current.qty > 1) current.qty -= 1;
+      else state.cart.delete(id);
       renderCart();
     });
 
-    document.querySelector("#orderForm").addEventListener("submit", (event) => {
+    document.querySelector("#registerForm").addEventListener("submit", async (event) => {
       event.preventDefault();
+      try {
+        const data = await api("/api/auth/register", {
+          method: "POST",
+          body: JSON.stringify({
+            name: document.querySelector("#registerName").value,
+            email: document.querySelector("#registerEmail").value,
+            password: document.querySelector("#registerPassword").value
+          })
+        });
+        state.user = data.user;
+        renderSession();
+        event.currentTarget.reset();
+        showToast("Conta criada. Voce ja pode enviar pedidos.");
+        await loadOrders();
+      } catch (error) {
+        showToast(error.message);
+      }
+    });
+
+    document.querySelector("#loginForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      try {
+        const data = await api("/api/auth/login", {
+          method: "POST",
+          body: JSON.stringify({
+            email: document.querySelector("#loginEmail").value,
+            password: document.querySelector("#loginPassword").value
+          })
+        });
+        state.user = data.user;
+        renderSession();
+        event.currentTarget.reset();
+        showToast("Login realizado.");
+        await loadOrders();
+      } catch (error) {
+        showToast(error.message);
+      }
+    });
+
+    logoutButton.addEventListener("click", async () => {
+      await api("/api/auth/logout", { method: "POST", body: "{}" });
+      state.user = null;
+      renderSession();
+      await loadOrders();
+      showToast("Sessao encerrada.");
+    });
+
+    document.querySelector("#orderForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!state.user) {
+        showToast("Entre ou crie uma conta antes de enviar.");
+        document.querySelector("#acesso").scrollIntoView({ behavior: "smooth" });
+        return;
+      }
       if (state.cart.size === 0) {
         showToast("Adicione pelo menos um item antes de enviar.");
         return;
       }
 
-      const name = document.querySelector("#customer").value.trim() || "Cliente";
-      showToast(`Pedido enviado, ${name}. A equipe ja recebeu sua comanda.`);
-      state.cart.clear();
-      renderCart();
-      event.currentTarget.reset();
+      try {
+        await api("/api/orders", {
+          method: "POST",
+          body: JSON.stringify({
+            table_label: document.querySelector("#tableLabel").value,
+            notes: document.querySelector("#notes").value,
+            items: Array.from(state.cart.values()).map(({ item, qty }) => ({
+              menu_item_id: item.id,
+              quantity: qty
+            }))
+          })
+        });
+        state.cart.clear();
+        renderCart();
+        event.currentTarget.reset();
+        await loadOrders();
+        showToast("Pedido gravado no banco de dados.");
+      } catch (error) {
+        showToast(error.message);
+      }
     });
 
-    renderMenu();
-    renderCart();
+    document.querySelector("#refreshOrders").addEventListener("click", () => {
+      loadOrders().catch((error) => showToast(error.message));
+    });
+
+    async function start() {
+      renderCart();
+      try {
+        await loadSession();
+        await loadMenu();
+      } catch (error) {
+        showToast("Abra pelo servidor: python server.py");
+      }
+    }
+
+    start();
   </script>
 </body>
 </html>
