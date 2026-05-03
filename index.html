@@ -3,19 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Toobar | Full Stack Bar</title>
+  <title>Toobar | Bar e Cardapio</title>
   <style>
     :root {
       --ink: #1c1c20;
       --muted: #67625b;
-      --paper: #fff8ec;
+      --paper: #fff7ea;
       --surface: #ffffff;
       --line: #e9ddcb;
       --brand: #d7332a;
       --brand-dark: #961f1a;
       --gold: #efb23e;
       --mint: #2d8d69;
-      --steel: #27313d;
+      --steel: #222831;
+      --wine: #6f1d1b;
       --shadow: 0 18px 50px rgba(40, 26, 16, .14);
     }
 
@@ -232,14 +233,35 @@
     }
 
     .stack-card {
-      min-height: 126px;
-      padding: 20px;
+      min-height: 154px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .stack-card::after {
+      content: "";
+      position: absolute;
+      right: -34px;
+      bottom: -42px;
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      background: rgba(239,178,62,.18);
+    }
+
+    .stack-card:hover,
+    .item:hover,
+    .auth-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 42px rgba(40,26,16,.12);
     }
 
     .stack-card strong {
       display: block;
       margin-bottom: 8px;
-      font-size: 17px;
+      font-size: 19px;
     }
 
     .stack-card span {
@@ -256,11 +278,19 @@
 
     .auth-card {
       padding: 22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,251,244,.98));
     }
 
     .auth-card h3 {
       margin: 0 0 16px;
       font-size: 22px;
+    }
+
+    .auth-card p {
+      margin: -6px 0 18px;
+      color: var(--muted);
+      line-height: 1.55;
     }
 
     .form {
@@ -341,6 +371,7 @@
       gap: 16px;
       min-height: 158px;
       padding: 12px;
+      transition: transform .18s ease, box-shadow .18s ease;
     }
 
     .item img {
@@ -386,6 +417,12 @@
       font-size: 24px;
       font-weight: 800;
       line-height: 1;
+      transition: transform .16s ease, background .16s ease;
+    }
+
+    .add:hover {
+      transform: scale(1.04);
+      background: #257756;
     }
 
     .order-panel {
@@ -396,7 +433,8 @@
 
     .panel-head {
       padding: 20px;
-      background: var(--steel);
+      background:
+        linear-gradient(135deg, var(--steel), var(--wine));
       color: #fff;
     }
 
@@ -535,13 +573,13 @@
         <span>Toobar</span>
       </a>
       <div class="nav-links">
-        <a href="#arquitetura">Arquitetura</a>
-        <a href="#acesso">Usuarios</a>
+        <a href="#experiencia">A casa</a>
+        <a href="#acesso">Minha comanda</a>
         <a href="#cardapio">Cardapio</a>
         <a href="#pedidos">Pedidos</a>
       </div>
       <div class="session">
-        <span class="session-name" id="sessionName">Visitante</span>
+        <span class="session-name" id="sessionName">Sem comanda</span>
         <button class="button ghost" id="logoutButton" type="button" hidden>Sair</button>
       </div>
     </nav>
@@ -550,56 +588,58 @@
   <main id="inicio">
     <section class="hero">
       <div class="hero-inner">
-        <span class="eyebrow">Sistema full stack para bar</span>
+        <span class="eyebrow">Bar, petiscos e bons encontros</span>
         <h1>Venha tomar no Toobar</h1>
-        <p>Cardapio digital gratuito, local e sem dependencias pagas: usuarios, pedidos e dados ficam no seu computador com SQLite.</p>
+        <p>Drinks bem feitos, porcoes caprichadas e uma comanda simples para pedir da mesa sem perder a conversa.</p>
         <div class="hero-actions">
-          <a class="button primary" href="#acesso">Entrar ou cadastrar</a>
-          <a class="button gold" href="#cardapio">Ver cardapio</a>
+          <a class="button primary" href="#cardapio">Abrir cardapio</a>
+          <a class="button gold" href="#acesso">Comecar comanda</a>
         </div>
       </div>
     </section>
 
-    <section class="section" id="arquitetura" aria-labelledby="arquiteturaTitle">
+    <section class="section" id="experiencia" aria-labelledby="experienciaTitle">
       <div class="section-head">
         <div>
-          <span class="eyebrow" style="color: var(--brand-dark);">Engenharia</span>
-          <h2 class="section-title" id="arquiteturaTitle">Base pronta para crescer</h2>
+          <span class="eyebrow" style="color: var(--brand-dark);">A casa</span>
+          <h2 class="section-title" id="experienciaTitle">No ponto para ficar mais um pouco</h2>
         </div>
-        <p class="section-copy">A aplicacao roda localmente: interface, API, regras de negocio, seguranca, banco de dados e testes automatizados no mesmo projeto.</p>
+        <p class="section-copy">Um bar de clima quente, cozinha ligeira e cardapio direto ao ponto. Escolha, monte sua comanda e acompanhe seus pedidos.</p>
       </div>
       <div class="stack-grid">
-        <article class="stack-card"><strong>Frontend local</strong><span>HTML, CSS e JavaScript sem CDN, fonte externa ou build pago.</span></article>
-        <article class="stack-card"><strong>Backend local</strong><span>Servidor Python com rotas REST para auth, menu, pedidos e saude.</span></article>
-        <article class="stack-card"><strong>Banco gratis</strong><span>SQLite com usuarios, sessoes, cardapio, pedidos e itens.</span></article>
-        <article class="stack-card"><strong>Qualidade</strong><span>Testes unitarios cobrindo cadastro, login, menu e pedidos.</span></article>
+        <article class="stack-card"><strong>Petiscos de mesa</strong><span>Porcoes generosas, molhos da casa e receitas pensadas para dividir.</span></article>
+        <article class="stack-card"><strong>Drinks autorais</strong><span>Classicos bem executados e combinacoes frescas para abrir a noite.</span></article>
+        <article class="stack-card"><strong>Chopp gelado</strong><span>Caneca no ponto, sem espera longa e com reposicao facil pela comanda.</span></article>
+        <article class="stack-card"><strong>Pedido sem fila</strong><span>Monte tudo pelo cardapio e envie para a equipe preparar.</span></article>
       </div>
     </section>
 
     <section class="section" id="acesso" aria-labelledby="acessoTitle">
       <div class="section-head">
         <div>
-          <span class="eyebrow" style="color: var(--brand-dark);">Usuarios</span>
-          <h2 class="section-title" id="acessoTitle">Autenticacao</h2>
+          <span class="eyebrow" style="color: var(--brand-dark);">Minha comanda</span>
+          <h2 class="section-title" id="acessoTitle">Entre para pedir</h2>
         </div>
-        <p class="section-copy">Para enviar pedido, o cliente entra ou cria uma conta. A sessao fica em cookie HttpOnly no backend.</p>
+        <p class="section-copy">Crie sua comanda em poucos segundos. Assim a equipe sabe quem pediu, onde entregar e o que ja foi enviado.</p>
       </div>
       <div class="auth-grid">
         <article class="auth-card">
-          <h3>Criar conta</h3>
+          <h3>Primeira vez no Toobar</h3>
+          <p>Abra uma comanda para a equipe encontrar sua mesa e seus pedidos.</p>
           <form class="form" id="registerForm">
             <div class="field"><label for="registerName">Nome</label><input id="registerName" autocomplete="name" placeholder="Ex.: Ana"></div>
             <div class="field"><label for="registerEmail">Email</label><input id="registerEmail" type="email" autocomplete="email" placeholder="ana@email.com"></div>
             <div class="field"><label for="registerPassword">Senha</label><input id="registerPassword" type="password" autocomplete="new-password" placeholder="Minimo 6 caracteres"></div>
-            <button class="button primary" type="submit">Cadastrar</button>
+            <button class="button primary" type="submit">Abrir comanda</button>
           </form>
         </article>
         <article class="auth-card">
-          <h3>Entrar</h3>
+          <h3>Ja tenho comanda</h3>
+          <p>Volte para acompanhar seus pedidos e mandar mais uma rodada.</p>
           <form class="form" id="loginForm">
             <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" autocomplete="email" placeholder="ana@email.com"></div>
             <div class="field"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Sua senha"></div>
-            <button class="button dark" type="submit">Entrar</button>
+            <button class="button dark" type="submit">Continuar pedido</button>
           </form>
         </article>
       </div>
@@ -608,10 +648,10 @@
     <section class="section" id="cardapio" aria-labelledby="cardapioTitle">
       <div class="section-head">
         <div>
-          <span class="eyebrow" style="color: var(--brand-dark);">Menu + Pedidos</span>
-          <h2 class="section-title" id="cardapioTitle">Cardapio vindo do banco</h2>
+          <span class="eyebrow" style="color: var(--brand-dark);">Menu da noite</span>
+          <h2 class="section-title" id="cardapioTitle">Escolha o seu pedido</h2>
         </div>
-        <p class="section-copy">Os produtos sao carregados via API. Ao enviar, o pedido e gravado com usuario, mesa, itens, quantidades e total.</p>
+        <p class="section-copy">Filtre por categoria, adicione os itens favoritos e envie tudo em uma comanda so.</p>
       </div>
 
       <div class="menu-shell" id="pedidos">
@@ -629,7 +669,7 @@
         <aside class="order-panel" aria-label="Resumo do pedido">
           <div class="panel-head">
             <h2>Seu pedido</h2>
-            <span>Login obrigatorio para gravar no banco.</span>
+            <span>Entre, informe a mesa e mande para a cozinha.</span>
           </div>
           <div class="cart" id="cart"></div>
           <form class="checkout" id="orderForm">
@@ -646,19 +686,19 @@
       <div class="orders-panel">
         <div class="section-head" style="margin-bottom: 0;">
           <div>
-            <span class="eyebrow" style="color: var(--brand-dark);">Banco de dados</span>
-            <h2 class="section-title" id="historicoTitle">Historico de pedidos</h2>
+            <span class="eyebrow" style="color: var(--brand-dark);">Acompanhe</span>
+            <h2 class="section-title" id="historicoTitle">Minhas comandas</h2>
           </div>
           <button class="button dark" id="refreshOrders" type="button">Atualizar</button>
         </div>
         <div class="orders-list" id="ordersList">
-          <p class="empty">Entre para ver os pedidos gravados.</p>
+          <p class="empty">Entre para ver suas comandas.</p>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">Toobar - arquitetura full stack com SQLite, autenticacao e testes.</footer>
+  <footer class="footer">Toobar - feito para mesa cheia, chopp gelado e pedido sem fila.</footer>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
@@ -697,7 +737,7 @@
     }
 
     function renderSession() {
-      sessionName.textContent = state.user ? state.user.name : "Visitante";
+      sessionName.textContent = state.user ? state.user.name : "Sem comanda";
       logoutButton.hidden = !state.user;
     }
 
@@ -765,13 +805,13 @@
 
     async function loadOrders() {
       if (!state.user) {
-        ordersList.innerHTML = '<p class="empty">Entre para ver os pedidos gravados.</p>';
+        ordersList.innerHTML = '<p class="empty">Entre para ver suas comandas.</p>';
         return;
       }
 
       const data = await api("/api/orders");
       if (!data.orders.length) {
-        ordersList.innerHTML = '<p class="empty">Nenhum pedido enviado ainda.</p>';
+        ordersList.innerHTML = '<p class="empty">Sua comanda ainda esta limpa. Escolha algo do cardapio.</p>';
         return;
       }
 
@@ -831,7 +871,7 @@
         state.user = data.user;
         renderSession();
         event.currentTarget.reset();
-        showToast("Conta criada. Voce ja pode enviar pedidos.");
+        showToast("Comanda aberta. Agora e so escolher.");
         await loadOrders();
       } catch (error) {
         showToast(error.message);
@@ -851,7 +891,7 @@
         state.user = data.user;
         renderSession();
         event.currentTarget.reset();
-        showToast("Login realizado.");
+        showToast("Comanda recuperada.");
         await loadOrders();
       } catch (error) {
         showToast(error.message);
@@ -894,7 +934,7 @@
         renderCart();
         event.currentTarget.reset();
         await loadOrders();
-        showToast("Pedido gravado no banco de dados.");
+        showToast("Pedido enviado para a equipe.");
       } catch (error) {
         showToast(error.message);
       }
@@ -910,7 +950,7 @@
         await loadSession();
         await loadMenu();
       } catch (error) {
-        showToast("Abra pelo servidor: python server.py");
+        showToast("Abra pelo endereco local do Toobar.");
       }
     }
 
