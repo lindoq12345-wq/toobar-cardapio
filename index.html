@@ -1,960 +1,1677 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Toobar | Bar e Cardapio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#16121E">
+  <meta name="description" content="Toobar — bar com drinks autorais, petiscos e comanda digital direta da mesa.">
+  <title>Toobar · Bar e Cardápio Digital</title>
+
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23B91C2C'/><text x='50%25' y='58%25' text-anchor='middle' font-family='Georgia,serif' font-weight='900' font-size='30' fill='%23F8F1E2'>T</text></svg>">
+
   <style>
+    /* =========================================================
+       TOOBAR — design system
+       ========================================================= */
     :root {
-      --ink: #1c1c20;
-      --muted: #67625b;
-      --paper: #fff7ea;
-      --surface: #ffffff;
-      --line: #e9ddcb;
-      --brand: #d7332a;
-      --brand-dark: #961f1a;
-      --gold: #efb23e;
-      --mint: #2d8d69;
-      --steel: #222831;
-      --wine: #6f1d1b;
-      --shadow: 0 18px 50px rgba(40, 26, 16, .14);
+      --ink:        #16121E;
+      --ink-soft:   #2A2434;
+      --muted:      #5A5266;
+      --paper:      #F8F1E2;
+      --paper-2:    #FFFDF7;
+      --surface:    #FFFFFF;
+      --surface-2:  #FFF7E6;
+      --line:       #E8DCC4;
+      --line-soft:  #F0E6D1;
+
+      --brand:      #B91C2C;
+      --brand-dark: #7C1220;
+      --gold:       #E0A82E;
+      --gold-soft:  #F5D77E;
+      --mint:       #2E7D5B;
+      --wine:       #4A1825;
+
+      --danger:     #C73E3A;
+      --success:    #2E7D5B;
+      --info:       #3E5C76;
+
+      --r-sm: 8px;
+      --r-md: 14px;
+      --r-lg: 22px;
+      --r-pill: 999px;
+
+      --shadow-1: 0 1px 2px rgba(20,12,30,.06), 0 2px 6px rgba(20,12,30,.04);
+      --shadow-2: 0 4px 12px rgba(20,12,30,.08), 0 12px 32px rgba(20,12,30,.10);
+      --shadow-3: 0 24px 64px rgba(20,12,30,.18);
+
+      --display: "Cormorant Garamond", "Playfair Display", Georgia, "Times New Roman", serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", system-ui, sans-serif;
+
+      --ease-out: cubic-bezier(.22, 1, .36, 1);
+      --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+
+      --topbar-h: 68px;
     }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    [data-theme="dark"] {
+      --ink:        #F4ECDB;
+      --ink-soft:   #D7CFB9;
+      --muted:      #9E96A6;
+      --paper:      #0F0B17;
+      --paper-2:    #15101F;
+      --surface:    #1B1527;
+      --surface-2:  #221A30;
+      --line:       #2E2540;
+      --line-soft:  #241B33;
+      --brand:      #E04B58;
+      --brand-dark: #B91C2C;
+      --gold:       #F0BD52;
+      --gold-soft:  #4A3818;
+      --mint:       #4FAE7E;
+      --wine:       #6B2333;
+      --shadow-1: 0 1px 2px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.3);
+      --shadow-2: 0 6px 18px rgba(0,0,0,.5), 0 18px 40px rgba(0,0,0,.4);
+      --shadow-3: 0 30px 80px rgba(0,0,0,.6);
+    }
+
+    *,*::before,*::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: var(--sans);
       color: var(--ink);
       background: var(--paper);
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
-    button, input, textarea { font: inherit; }
-    button { cursor: pointer; }
+    img { display: block; max-width: 100%; }
+    button, input, textarea, select { font: inherit; color: inherit; }
+    button { cursor: pointer; background: none; border: 0; padding: 0; }
     a { color: inherit; text-decoration: none; }
 
+    :focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    .skip { position: absolute; left: -9999px; top: 0; }
+    .skip:focus {
+      left: 12px; top: 12px;
+      z-index: 100;
+      padding: 10px 14px;
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: var(--r-sm);
+    }
+
+    /* ============ TOPBAR ============ */
     .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: rgba(28, 28, 32, .94);
-      color: #fff;
-      border-bottom: 1px solid rgba(255,255,255,.14);
-      backdrop-filter: blur(14px);
+      position: sticky; top: 0; z-index: 30;
+      background: color-mix(in srgb, var(--ink) 96%, transparent);
+      color: var(--paper);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
     }
-
+    [data-theme="dark"] .topbar {
+      background: color-mix(in srgb, var(--paper-2) 92%, transparent);
+      border-bottom-color: var(--line);
+    }
     .nav {
-      width: min(1180px, calc(100% - 32px));
-      min-height: 72px;
+      width: min(1200px, calc(100% - 32px));
+      min-height: var(--topbar-h);
       margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
+      display: flex; align-items: center; gap: 18px;
     }
-
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 900;
-    }
-
-    .brand-mark {
-      width: 42px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      border-radius: 8px;
-      background: var(--brand);
-      box-shadow: inset 0 -8px 0 rgba(0,0,0,.12);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      color: rgba(255,255,255,.78);
-      font-size: 14px;
+      display: flex; align-items: center; gap: 12px;
+      font-family: var(--display);
       font-weight: 700;
+      font-size: 22px;
+      letter-spacing: .01em;
     }
+    .brand-mark {
+      width: 38px; height: 38px;
+      display: grid; place-items: center;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--brand), var(--wine));
+      color: #FFE9C9;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: inset 0 -6px 0 rgba(0,0,0,.18), 0 4px 14px rgba(185,28,44,.45);
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 4px;
+      margin-left: 8px;
+      flex: 1;
+    }
+    .nav-links a {
+      padding: 8px 12px;
+      border-radius: var(--r-pill);
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(248,241,226,.78);
+      transition: background .2s var(--ease-out), color .2s;
+    }
+    [data-theme="dark"] .nav-links a { color: var(--muted); }
+    .nav-links a:hover { background: rgba(255,255,255,.08); color: var(--paper); }
+    [data-theme="dark"] .nav-links a:hover { background: var(--surface-2); color: var(--ink); }
 
-    .session {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 190px;
-      justify-content: flex-end;
+    .nav-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+    .icon-btn {
+      width: 40px; height: 40px;
+      display: grid; place-items: center;
+      border-radius: var(--r-pill);
+      color: var(--paper);
+      transition: background .2s, transform .15s;
+      position: relative;
     }
+    [data-theme="dark"] .icon-btn { color: var(--ink); }
+    .icon-btn:hover { background: rgba(255,255,255,.1); }
+    [data-theme="dark"] .icon-btn:hover { background: var(--surface-2); }
+    .icon-btn:active { transform: scale(.94); }
+    .icon-btn svg { width: 20px; height: 20px; }
+
+    .cart-badge {
+      position: absolute; top: 4px; right: 4px;
+      min-width: 18px; height: 18px; padding: 0 5px;
+      display: grid; place-items: center;
+      border-radius: var(--r-pill);
+      background: var(--gold);
+      color: #2A1F08;
+      font-size: 11px; font-weight: 800;
+      transform: scale(0);
+      transition: transform .25s var(--ease-out);
+    }
+    .cart-badge.show { transform: scale(1); }
 
     .session-name {
-      max-width: 150px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      color: rgba(255,255,255,.78);
+      max-width: 140px;
+      padding: 0 10px;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 600;
+      color: rgba(248,241,226,.7);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
+    [data-theme="dark"] .session-name { color: var(--muted); }
 
-    .button {
+    /* ============ BUTTONS ============ */
+    .btn {
       min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 0 16px;
+      padding: 0 20px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      border-radius: var(--r-pill);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: .01em;
       border: 0;
-      border-radius: 8px;
-      font-weight: 900;
+      transition: transform .15s var(--ease-out), box-shadow .2s, background .2s, color .2s;
+      white-space: nowrap;
     }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary {
+      background: var(--brand);
+      color: #FFF7EA;
+      box-shadow: 0 4px 14px rgba(185,28,44,.35);
+    }
+    .btn-primary:hover { background: var(--brand-dark); box-shadow: 0 8px 24px rgba(185,28,44,.45); }
+    .btn-gold {
+      background: var(--gold);
+      color: #2A1F08;
+      box-shadow: 0 4px 14px rgba(224,168,46,.35);
+    }
+    .btn-gold:hover { background: #C9931F; }
+    .btn-dark {
+      background: var(--ink);
+      color: var(--paper);
+    }
+    [data-theme="dark"] .btn-dark { background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); }
+    .btn-dark:hover { background: var(--ink-soft); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--paper);
+      border: 1px solid rgba(255,255,255,.25);
+    }
+    [data-theme="dark"] .btn-ghost { color: var(--ink); border-color: var(--line); }
+    .btn-ghost:hover { background: rgba(255,255,255,.08); }
+    [data-theme="dark"] .btn-ghost:hover { background: var(--surface-2); }
+    .btn-soft {
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    .btn-soft:hover { background: var(--surface-2); }
+    .btn-sm { min-height: 36px; padding: 0 14px; font-size: 13px; }
+    .btn-block { width: 100%; }
+    .btn[disabled] { opacity: .5; cursor: not-allowed; transform: none; }
 
-    .button.primary { background: var(--brand); color: #fff; }
-    .button.gold { background: var(--gold); color: #2d2108; }
-    .button.dark { background: var(--steel); color: #fff; }
-    .button.ghost { border: 1px solid rgba(255,255,255,.3); background: transparent; color: #fff; }
-
+    /* ============ HERO ============ */
     .hero {
       position: relative;
-      min-height: calc(100vh - 72px);
-      display: grid;
-      align-items: end;
-      color: #fff;
+      overflow: hidden;
+      color: #F8F1E2;
       background:
-        radial-gradient(circle at 78% 28%, rgba(239,178,62,.46) 0 12%, transparent 13%),
-        radial-gradient(circle at 66% 62%, rgba(215,51,42,.38) 0 11%, transparent 12%),
-        linear-gradient(90deg, rgba(18,18,20,.94), rgba(18,18,20,.72) 48%, rgba(18,18,20,.42)),
-        repeating-linear-gradient(115deg, #3a2521 0 18px, #1d1d21 18px 36px);
+        radial-gradient(ellipse 80% 50% at 80% 20%, rgba(224,168,46,.18), transparent 60%),
+        radial-gradient(ellipse 60% 40% at 10% 80%, rgba(185,28,44,.22), transparent 55%),
+        linear-gradient(160deg, #1B1527 0%, #0F0B17 60%, #1A1227 100%);
+      isolation: isolate;
     }
-
-    .hero-inner, .section {
-      width: min(1180px, calc(100% - 32px));
+    .hero::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(rgba(224,168,46,.08) 1px, transparent 1px);
+      background-size: 22px 22px;
+      mask-image: radial-gradient(ellipse 70% 70% at 30% 40%, #000 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 70% at 30% 40%, #000 30%, transparent 80%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-grid {
+      position: relative; z-index: 1;
+      width: min(1200px, calc(100% - 32px));
       margin: 0 auto;
-    }
-
-    .hero-inner { padding: 96px 0 86px; }
-    .eyebrow {
-      display: inline-flex;
+      padding: clamp(60px, 9vw, 110px) 0 clamp(70px, 10vw, 120px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+      gap: 40px;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
-      color: #ffe6a5;
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: .08em;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .18em;
       text-transform: uppercase;
+      color: var(--gold-soft);
     }
     .eyebrow::before {
-      content: "";
-      width: 34px;
-      height: 3px;
-      border-radius: 999px;
+      content: ""; width: 28px; height: 2px;
       background: var(--gold);
+      border-radius: var(--r-pill);
     }
+    .eyebrow.dark { color: var(--brand); }
+    [data-theme="dark"] .eyebrow.dark { color: var(--gold); }
 
     h1 {
-      width: min(820px, 100%);
-      margin: 0;
-      font-size: clamp(44px, 8vw, 88px);
-      line-height: .98;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(48px, 9vw, 104px);
+      line-height: .92;
+      letter-spacing: -.02em;
+      margin: 18px 0 0;
     }
-
-    .hero p {
-      width: min(650px, 100%);
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+      font-weight: 500;
+    }
+    .hero-lead {
+      max-width: 540px;
       margin: 22px 0 0;
-      color: rgba(255,255,255,.84);
-      font-size: clamp(17px, 2vw, 21px);
+      color: rgba(248,241,226,.78);
+      font-size: clamp(16px, 1.4vw, 19px);
       line-height: 1.6;
     }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: min(8vw, 110px);
-      bottom: 68px;
-      width: min(34vw, 360px);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 50% 42%, rgba(255,255,255,.95) 0 12%, transparent 13%),
-        radial-gradient(circle at 50% 56%, rgba(239,178,62,.92) 0 28%, transparent 29%),
-        linear-gradient(#f3d083 0 0) 50% 62% / 46% 44% no-repeat;
-      border: 14px solid rgba(255,255,255,.16);
-      box-shadow: inset 0 -34px 0 rgba(0,0,0,.2), 0 30px 80px rgba(0,0,0,.32);
-      opacity: .78;
-      pointer-events: none;
+    .hero-actions { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-meta {
+      margin-top: 36px;
+      display: flex; flex-wrap: wrap; gap: 28px;
+      color: rgba(248,241,226,.55);
+      font-size: 13px;
+    }
+    .hero-meta strong {
+      display: block;
+      color: var(--paper);
+      font-family: var(--display);
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 2px;
     }
 
-    .hero-inner {
+    /* mockup card no hero — comanda */
+    .hero-mock {
       position: relative;
-      z-index: 1;
+      perspective: 1200px;
+    }
+    .mock-card {
+      background: var(--paper-2);
+      color: var(--ink);
+      border-radius: var(--r-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-3);
+      transform: rotate(2deg);
+      max-width: 360px;
+      margin-left: auto;
+      transition: transform .5s var(--ease-out);
+    }
+    .mock-card:hover { transform: rotate(0deg) translateY(-4px); }
+    .mock-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 14px; margin-bottom: 14px;
+      border-bottom: 1px dashed var(--line);
+    }
+    .mock-head strong { font-family: var(--display); font-size: 22px; font-weight: 600; }
+    .mock-head span { color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+    .mock-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 7px 0;
+      font-size: 14px;
+    }
+    .mock-row .dots { flex: 1; margin: 0 8px; border-bottom: 1px dotted var(--line); transform: translateY(-3px); }
+    .mock-row .price { font-family: var(--display); font-weight: 600; font-size: 16px; }
+    .mock-total {
+      margin-top: 14px; padding-top: 14px;
+      border-top: 1px dashed var(--line);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .mock-total strong { font-family: var(--display); font-size: 28px; font-weight: 600; color: var(--brand); }
+    .mock-stamp {
+      position: absolute; right: -14px; top: -14px;
+      width: 92px; height: 92px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #2A1F08;
+      display: grid; place-items: center;
+      text-align: center;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 1.05;
+      transform: rotate(-12deg);
+      box-shadow: var(--shadow-2);
     }
 
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 32px;
+    /* ============ SECTION ============ */
+    .section {
+      width: min(1200px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: clamp(64px, 8vw, 96px) 0;
     }
-
-    .section { padding: 72px 0; }
     .section-head {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
       align-items: end;
-      gap: 24px;
-      margin-bottom: 28px;
+      margin-bottom: 36px;
     }
-
     .section-title {
-      margin: 0;
-      font-size: clamp(30px, 4vw, 48px);
-      line-height: 1.04;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(32px, 4.4vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -.015em;
+      margin: 12px 0 0;
     }
-
     .section-copy {
-      width: min(460px, 100%);
+      max-width: 460px;
       margin: 0;
       color: var(--muted);
       line-height: 1.65;
     }
 
-    .stack-grid {
+    /* ============ FEATURE GRID ============ */
+    .features {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-top: 24px;
+      gap: 16px;
     }
-
-    .stack-card, .auth-card, .item, .order-panel, .orders-panel {
-      border: 1px solid var(--line);
-      border-radius: 8px;
+    .feat {
+      padding: 26px 22px;
+      border-radius: var(--r-md);
       background: var(--surface);
-      box-shadow: 0 10px 30px rgba(40,26,16,.08);
-    }
-
-    .stack-card {
-      min-height: 154px;
-      padding: 22px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-1);
+      transition: transform .25s var(--ease-out), box-shadow .25s;
       position: relative;
       overflow: hidden;
-      transition: transform .18s ease, box-shadow .18s ease;
     }
-
-    .stack-card::after {
-      content: "";
-      position: absolute;
-      right: -34px;
-      bottom: -42px;
-      width: 128px;
-      height: 128px;
-      border-radius: 50%;
-      background: rgba(239,178,62,.18);
+    .feat:hover { transform: translateY(-4px); box-shadow: var(--shadow-2); }
+    .feat-icon {
+      width: 44px; height: 44px;
+      display: grid; place-items: center;
+      border-radius: 12px;
+      background: var(--surface-2);
+      color: var(--brand);
+      margin-bottom: 14px;
     }
-
-    .stack-card:hover,
-    .item:hover,
-    .auth-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 42px rgba(40,26,16,.12);
-    }
-
-    .stack-card strong {
+    [data-theme="dark"] .feat-icon { background: var(--paper-2); }
+    .feat-icon svg { width: 22px; height: 22px; }
+    .feat strong {
       display: block;
-      margin-bottom: 8px;
-      font-size: 19px;
+      font-family: var(--display);
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .feat span { color: var(--muted); font-size: 14px; line-height: 1.55; }
+
+    /* ============ MENU ============ */
+    .menu-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 28px; align-items: start; }
+
+    .menu-toolbar {
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+      margin-bottom: 18px;
+    }
+    .search {
+      flex: 1; min-width: 220px;
+      position: relative;
+    }
+    .search input {
+      width: 100%;
+      height: 44px;
+      padding: 0 16px 0 44px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-pill);
+      background: var(--surface);
+      color: var(--ink);
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .search input:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 15%, transparent);
+    }
+    .search svg {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      width: 18px; height: 18px;
+      color: var(--muted);
     }
 
-    .stack-card span {
+    .sort {
+      height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-pill);
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .tabs {
+      position: sticky; top: calc(var(--topbar-h) + 8px);
+      z-index: 5;
+      display: flex; gap: 4px;
+      padding: 6px;
+      margin-bottom: 22px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--r-pill);
+      background: color-mix(in srgb, var(--paper-2) 88%, transparent);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      min-height: 38px;
+      padding: 0 16px;
+      border-radius: var(--r-pill);
       color: var(--muted);
+      font-weight: 700;
+      font-size: 13px;
+      white-space: nowrap;
+      transition: background .2s, color .2s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .tab:hover { color: var(--ink); }
+    .tab.active {
+      background: var(--ink);
+      color: var(--paper);
+      box-shadow: var(--shadow-1);
+    }
+    [data-theme="dark"] .tab.active { background: var(--gold); color: #2A1F08; }
+    .tab-count {
+      display: inline-grid; place-items: center;
+      min-width: 20px; height: 20px;
+      padding: 0 6px;
+      border-radius: var(--r-pill);
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 11px; font-weight: 800;
+    }
+    .tab.active .tab-count { background: rgba(255,255,255,.18); color: var(--paper); }
+    [data-theme="dark"] .tab.active .tab-count { background: rgba(0,0,0,.18); color: #2A1F08; }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .item {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-1);
+      transition: transform .25s var(--ease-out), box-shadow .25s;
+      display: flex; flex-direction: column;
+    }
+    .item:hover { transform: translateY(-4px); box-shadow: var(--shadow-2); }
+
+    .item-media {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      background: linear-gradient(135deg, var(--surface-2), var(--line-soft));
+      overflow: hidden;
+    }
+    .item-media img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .6s var(--ease-out);
+    }
+    .item:hover .item-media img { transform: scale(1.05); }
+    .item-tags {
+      position: absolute; top: 12px; left: 12px;
+      display: flex; gap: 6px;
+    }
+    .tag {
+      padding: 4px 10px;
+      border-radius: var(--r-pill);
+      background: rgba(20,12,30,.78);
+      color: var(--paper);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .tag.gold { background: var(--gold); color: #2A1F08; }
+    .tag.mint { background: var(--mint); color: #FFF; }
+
+    .item-body {
+      padding: 16px 18px 18px;
+      display: flex; flex-direction: column; flex: 1;
+    }
+    .item-body h3 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 22px;
+      line-height: 1.2;
+      margin: 0 0 6px;
+    }
+    .item-body p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
       line-height: 1.5;
+      flex: 1;
+    }
+    .item-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--line);
+    }
+    .price {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 24px;
+      color: var(--ink);
+    }
+    .price small { color: var(--muted); font-family: var(--sans); font-size: 12px; font-weight: 600; margin-right: 4px; }
+
+    .stepper { display: flex; align-items: center; gap: 4px; }
+    .step-btn {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      border-radius: var(--r-pill);
+      background: var(--surface-2);
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 18px;
+      transition: background .2s, transform .12s;
+    }
+    .step-btn:hover { background: var(--line-soft); }
+    .step-btn:active { transform: scale(.92); }
+    .step-btn.add {
+      background: var(--brand); color: #FFF7EA;
+      box-shadow: 0 4px 12px rgba(185,28,44,.35);
+    }
+    .step-btn.add:hover { background: var(--brand-dark); }
+    .step-qty {
+      min-width: 24px;
+      text-align: center;
+      font-weight: 800;
+      font-family: var(--display);
+      font-size: 18px;
+    }
+
+    /* skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface-2), var(--line-soft), var(--surface-2));
+      background-size: 200% 100%;
+      animation: shimmer 1.4s linear infinite;
+      border-radius: var(--r-md);
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .skel-card { height: 320px; }
+
+    /* ============ ORDER PANEL ============ */
+    .order-panel {
+      position: sticky; top: calc(var(--topbar-h) + 16px);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-2);
+    }
+    .panel-head {
+      padding: 22px;
+      background: linear-gradient(135deg, var(--ink) 0%, var(--wine) 100%);
+      color: var(--paper);
+    }
+    .panel-head h2 {
+      font-family: var(--display);
+      font-weight: 600;
+      margin: 0 0 4px;
+      font-size: 24px;
+    }
+    .panel-head span { color: rgba(248,241,226,.72); font-size: 13px; }
+
+    .cart-list { max-height: 360px; overflow-y: auto; padding: 8px 18px; }
+    .empty {
+      padding: 20px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .empty svg { width: 48px; height: 48px; opacity: .35; margin: 0 auto 8px; display: block; }
+
+    .cart-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px; align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+    .cart-row:last-child { border-bottom: 0; }
+    .cart-row .name {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .cart-row .meta {
+      color: var(--muted);
+      font-size: 12px;
+      display: flex; gap: 8px; align-items: center;
+    }
+    .cart-row .remove {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      font-weight: 700;
+      transition: color .2s;
+    }
+    .cart-row .remove:hover { color: var(--danger); }
+    .cart-qty { display: flex; align-items: center; gap: 6px; }
+    .cart-qty button {
+      width: 26px; height: 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-pill);
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 800;
+      transition: background .15s;
+    }
+    .cart-qty button:hover { background: var(--surface-2); }
+    .cart-qty span { min-width: 18px; text-align: center; font-weight: 700; font-size: 14px; }
+
+    .checkout {
+      display: grid; gap: 14px;
+      padding: 20px;
+      border-top: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+    .field { display: grid; gap: 6px; }
+    .field label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .field input, .field textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-sm);
+      background: var(--surface);
+      color: var(--ink);
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .field input:focus, .field textarea:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 15%, transparent);
+    }
+    .field textarea { min-height: 70px; resize: vertical; }
+
+    .total {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 28px;
+    }
+    .total span:first-child { font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .total strong { color: var(--brand); }
+
+    /* ============ AUTH ============ */
+    .auth-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 26px;
+      box-shadow: var(--shadow-1);
+    }
+    .auth-tabs {
+      display: flex;
+      background: var(--surface-2);
+      border-radius: var(--r-pill);
+      padding: 4px;
+      margin-bottom: 22px;
+    }
+    .auth-tab {
+      flex: 1;
+      min-height: 38px;
+      border-radius: var(--r-pill);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--muted);
+      transition: background .2s, color .2s;
+    }
+    .auth-tab.active {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: var(--shadow-1);
+    }
+    .auth-pane { display: none; }
+    .auth-pane.active { display: grid; gap: 14px; }
+    .auth-card h3 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 28px;
+      margin: 0 0 4px;
+    }
+    .auth-card .sub {
+      margin: 0 0 22px;
+      color: var(--muted);
       font-size: 14px;
     }
 
     .auth-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-
-    .auth-card {
-      padding: 22px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,251,244,.98));
-    }
-
-    .auth-card h3 {
-      margin: 0 0 16px;
-      font-size: 22px;
-    }
-
-    .auth-card p {
-      margin: -6px 0 18px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .form {
-      display: grid;
-      gap: 12px;
-    }
-
-    .field {
-      display: grid;
-      gap: 6px;
-    }
-
-    .field label {
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .field input, .field textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px;
-      outline: 0;
-      background: #fff;
-      color: var(--ink);
-    }
-
-    .field textarea {
-      min-height: 78px;
-      resize: vertical;
-    }
-
-    .menu-shell {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 380px;
-      gap: 24px;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 28px;
       align-items: start;
     }
-
-    .tabs {
-      position: sticky;
-      top: 88px;
-      z-index: 4;
-      display: flex;
-      gap: 8px;
-      padding: 8px;
-      margin-bottom: 18px;
-      overflow-x: auto;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(255,248,236,.92);
-      backdrop-filter: blur(14px);
+    .auth-side {
+      padding: 32px;
+      border-radius: var(--r-md);
+      background: linear-gradient(140deg, var(--ink) 0%, var(--wine) 100%);
+      color: var(--paper);
+      min-height: 380px;
+      display: flex; flex-direction: column; justify-content: space-between;
     }
-
-    .tab {
-      min-height: 40px;
-      padding: 0 14px;
-      border: 0;
-      border-radius: 7px;
-      background: transparent;
-      color: var(--muted);
-      font-weight: 900;
-      white-space: nowrap;
+    .auth-side h3 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(28px, 3vw, 38px);
+      line-height: 1.1;
+      margin: 14px 0 14px;
     }
+    .auth-side p { color: rgba(248,241,226,.74); margin: 0; line-height: 1.6; }
+    .auth-side ul { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 12px; }
+    .auth-side li { display: flex; gap: 10px; align-items: center; font-size: 14px; color: rgba(248,241,226,.86); }
+    .auth-side li svg { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; }
 
-    .tab.active { background: var(--steel); color: #fff; }
-
-    .menu-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .item {
-      display: grid;
-      grid-template-columns: 108px minmax(0, 1fr);
-      gap: 16px;
-      min-height: 158px;
-      padding: 12px;
-      transition: transform .18s ease, box-shadow .18s ease;
-    }
-
-    .item img {
-      width: 108px;
-      height: 134px;
-      object-fit: cover;
-      border-radius: 7px;
-      background: #ddd;
-    }
-
-    .item h3 {
-      margin: 2px 0 6px;
-      font-size: 17px;
-      line-height: 1.2;
-    }
-
-    .item p {
-      min-height: 42px;
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.45;
-    }
-
-    .item-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .price { color: var(--brand-dark); font-weight: 900; }
-    .add {
-      width: 40px;
-      height: 40px;
-      display: grid;
-      place-items: center;
-      border: 0;
-      border-radius: 8px;
-      background: var(--mint);
-      color: #fff;
-      font-size: 24px;
-      font-weight: 800;
-      line-height: 1;
-      transition: transform .16s ease, background .16s ease;
-    }
-
-    .add:hover {
-      transform: scale(1.04);
-      background: #257756;
-    }
-
-    .order-panel {
-      position: sticky;
-      top: 88px;
-      overflow: hidden;
-    }
-
-    .panel-head {
-      padding: 20px;
-      background:
-        linear-gradient(135deg, var(--steel), var(--wine));
-      color: #fff;
-    }
-
-    .panel-head h2 { margin: 0 0 6px; font-size: 22px; }
-    .panel-head span { color: rgba(255,255,255,.74); font-size: 14px; }
-    .cart { max-height: 340px; overflow-y: auto; padding: 14px 18px; }
-    .empty { margin: 8px 0; color: var(--muted); line-height: 1.5; }
-
-    .cart-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .cart-row:last-child { border-bottom: 0; }
-    .cart-row strong { display: block; font-size: 14px; }
-    .cart-row span { color: var(--muted); font-size: 13px; }
-    .qty { display: flex; align-items: center; gap: 8px; }
-    .qty button {
-      width: 28px;
-      height: 28px;
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      background: #fff;
-      font-weight: 900;
-    }
-
-    .checkout {
-      display: grid;
-      gap: 12px;
-      padding: 18px;
-      border-top: 1px solid var(--line);
-      background: #fff4df;
-    }
-
-    .total {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 20px;
-      font-weight: 900;
-    }
-
-    .orders-panel {
-      padding: 20px;
-    }
-
-    .orders-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
+    /* ============ ORDERS ============ */
+    .orders-list { display: grid; gap: 14px; }
     .order-card {
-      padding: 14px;
+      padding: 18px 22px;
+      border-radius: var(--r-md);
+      background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fffdf8;
+      box-shadow: var(--shadow-1);
     }
-
-    .order-card strong {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 8px;
+    .order-head {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; margin-bottom: 10px; flex-wrap: wrap;
     }
+    .order-head .id { font-family: var(--display); font-size: 22px; font-weight: 600; }
+    .order-head .total-val { font-family: var(--display); font-size: 22px; font-weight: 600; color: var(--brand); }
+    .order-meta {
+      display: flex; gap: 14px; flex-wrap: wrap;
+      color: var(--muted); font-size: 13px;
+      margin-bottom: 12px;
+    }
+    .status-pill {
+      padding: 4px 12px;
+      border-radius: var(--r-pill);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .status-pill.open    { background: color-mix(in srgb, var(--gold) 25%, var(--paper-2)); color: #6B4F0E; }
+    .status-pill.preparing { background: color-mix(in srgb, var(--info) 25%, var(--paper-2)); color: #1F3A52; }
+    .status-pill.done    { background: color-mix(in srgb, var(--mint) 25%, var(--paper-2)); color: #1B5238; }
+    [data-theme="dark"] .status-pill.open { color: var(--gold); }
+    [data-theme="dark"] .status-pill.preparing { color: #93B7DB; }
+    [data-theme="dark"] .status-pill.done { color: #80D9AB; }
 
     .order-card ul {
-      margin: 8px 0 0;
-      padding-left: 18px;
+      margin: 0; padding: 0; list-style: none;
+      display: grid; gap: 4px;
       color: var(--muted);
-      line-height: 1.5;
+      font-size: 14px;
     }
+    .order-card ul li::before { content: "·"; margin-right: 8px; color: var(--brand); font-weight: 800; }
 
+    /* ============ TOAST ============ */
     .toast {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
+      position: fixed; right: 18px; bottom: 18px;
       z-index: 50;
-      width: min(390px, calc(100% - 36px));
-      padding: 16px;
-      border-radius: 8px;
-      background: var(--steel);
-      color: #fff;
-      box-shadow: var(--shadow);
-      transform: translateY(130%);
-      transition: transform .25s ease;
+      width: min(380px, calc(100% - 36px));
+      padding: 14px 18px;
+      border-radius: var(--r-md);
+      background: var(--ink);
+      color: var(--paper);
+      box-shadow: var(--shadow-3);
+      display: flex; gap: 12px; align-items: center;
+      transform: translateY(150%); opacity: 0;
+      transition: transform .35s var(--ease-out), opacity .25s;
+      border-left: 4px solid var(--gold);
     }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-left-color: var(--mint); }
+    .toast.error   { border-left-color: var(--danger); }
+    .toast.info    { border-left-color: var(--gold); }
+    .toast svg { width: 20px; height: 20px; flex-shrink: 0; }
 
-    .toast.show { transform: translateY(0); }
+    /* ============ FOOTER ============ */
     .footer {
-      padding: 32px 16px;
-      background: var(--steel);
-      color: rgba(255,255,255,.72);
-      text-align: center;
+      margin-top: 48px;
+      padding: 56px 0 28px;
+      background: var(--ink);
+      color: rgba(248,241,226,.7);
     }
+    [data-theme="dark"] .footer { background: var(--paper-2); border-top: 1px solid var(--line); }
+    .footer-inner {
+      width: min(1200px, calc(100% - 32px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 32px;
+    }
+    .footer h4 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--paper);
+      margin: 0 0 14px;
+    }
+    [data-theme="dark"] .footer h4 { color: var(--ink); }
+    .footer p { margin: 0 0 8px; line-height: 1.55; font-size: 14px; }
+    .footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; font-size: 14px; }
+    .footer a:hover { color: var(--gold); }
+    .footer-bottom {
+      margin-top: 40px; padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      width: min(1200px, calc(100% - 32px));
+      margin-left: auto; margin-right: auto;
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+      font-size: 13px;
+    }
+    [data-theme="dark"] .footer-bottom { border-top-color: var(--line); }
 
-    @media (max-width: 980px) {
-      .nav-links { display: none; }
-      .hero {
-        min-height: 740px;
-        background:
-          radial-gradient(circle at 78% 24%, rgba(239,178,62,.42) 0 12%, transparent 13%),
-          linear-gradient(180deg, rgba(18,18,20,.68), rgba(18,18,20,.95)),
-          repeating-linear-gradient(115deg, #3a2521 0 18px, #1d1d21 18px 36px);
-      }
-      .hero::after { opacity: .36; right: 18px; bottom: 36px; width: 280px; }
-      .section-head, .auth-grid, .menu-shell { display: grid; grid-template-columns: 1fr; }
-      .stack-grid, .menu-grid { grid-template-columns: 1fr 1fr; }
+    /* ============ ANIMATION REVEAL ============ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .6s var(--ease-out), transform .6s var(--ease-out);
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 1080px) {
+      .features { grid-template-columns: repeat(2, 1fr); }
+      .menu-wrap { grid-template-columns: 1fr; }
       .order-panel { position: static; }
+      .auth-grid { grid-template-columns: 1fr; }
+      .auth-side { min-height: auto; order: -1; }
+      .footer-inner { grid-template-columns: 1.2fr 1fr 1fr; }
+    }
+    @media (max-width: 820px) {
+      .nav-links { display: none; }
+      .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+      .hero-mock { max-width: 360px; margin: 0 auto; }
+      .section-head { grid-template-columns: 1fr; gap: 14px; }
+      .menu-grid { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px) {
+      .session-name { display: none; }
+      .hero-meta { gap: 18px; }
+      .footer-inner { grid-template-columns: 1fr; }
+      .item-media { aspect-ratio: 16 / 9; }
+      .toast { left: 18px; right: 18px; bottom: 18px; width: auto; }
     }
 
-    @media (max-width: 640px) {
-      .nav { width: min(100% - 24px, 1180px); min-height: 64px; }
-      .brand-mark { width: 38px; height: 38px; }
-      .session { min-width: auto; }
-      .session-name { display: none; }
-      .hero-inner, .section { width: min(100% - 24px, 1180px); }
-      .hero-inner { padding: 78px 0 58px; }
-      .hero-actions { display: grid; }
-      .section { padding: 54px 0; }
-      .stack-grid, .menu-grid { grid-template-columns: 1fr; }
-      .item { grid-template-columns: 92px minmax(0, 1fr); gap: 12px; }
-      .item img { width: 92px; height: 126px; }
-      .item p { min-height: auto; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+      .reveal { opacity: 1; transform: none; }
     }
   </style>
 </head>
 <body>
+  <a class="skip" href="#cardapio">Pular para o cardápio</a>
+
+  <!-- ============ TOPBAR ============ -->
   <header class="topbar">
-    <nav class="nav" aria-label="Navegacao principal">
-      <a class="brand" href="#inicio" aria-label="Toobar">
-        <span class="brand-mark">TB</span>
+    <nav class="nav" aria-label="Navegação principal">
+      <a class="brand" href="#inicio" aria-label="Toobar — início">
+        <span class="brand-mark" aria-hidden="true">T</span>
         <span>Toobar</span>
       </a>
-      <div class="nav-links">
+      <div class="nav-links" aria-label="Seções">
         <a href="#experiencia">A casa</a>
-        <a href="#acesso">Minha comanda</a>
-        <a href="#cardapio">Cardapio</a>
-        <a href="#pedidos">Pedidos</a>
+        <a href="#cardapio">Cardápio</a>
+        <a href="#acesso">Comanda</a>
+        <a href="#historico">Pedidos</a>
       </div>
-      <div class="session">
+      <div class="nav-actions">
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Alternar tema">
+          <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="icon-btn" id="cartBtn" type="button" aria-label="Ver pedido">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
         <span class="session-name" id="sessionName">Sem comanda</span>
-        <button class="button ghost" id="logoutButton" type="button" hidden>Sair</button>
+        <button class="btn btn-ghost btn-sm" id="logoutButton" type="button" hidden>Sair</button>
       </div>
     </nav>
   </header>
 
   <main id="inicio">
-    <section class="hero">
-      <div class="hero-inner">
-        <span class="eyebrow">Bar, petiscos e bons encontros</span>
-        <h1>Venha tomar no Toobar</h1>
-        <p>Drinks bem feitos, porcoes caprichadas e uma comanda simples para pedir da mesa sem perder a conversa.</p>
-        <div class="hero-actions">
-          <a class="button primary" href="#cardapio">Abrir cardapio</a>
-          <a class="button gold" href="#acesso">Comecar comanda</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="experiencia" aria-labelledby="experienciaTitle">
-      <div class="section-head">
+    <!-- ============ HERO ============ -->
+    <section class="hero" aria-label="Apresentação Toobar">
+      <div class="hero-grid">
         <div>
-          <span class="eyebrow" style="color: var(--brand-dark);">A casa</span>
-          <h2 class="section-title" id="experienciaTitle">No ponto para ficar mais um pouco</h2>
-        </div>
-        <p class="section-copy">Um bar de clima quente, cozinha ligeira e cardapio direto ao ponto. Escolha, monte sua comanda e acompanhe seus pedidos.</p>
-      </div>
-      <div class="stack-grid">
-        <article class="stack-card"><strong>Petiscos de mesa</strong><span>Porcoes generosas, molhos da casa e receitas pensadas para dividir.</span></article>
-        <article class="stack-card"><strong>Drinks autorais</strong><span>Classicos bem executados e combinacoes frescas para abrir a noite.</span></article>
-        <article class="stack-card"><strong>Chopp gelado</strong><span>Caneca no ponto, sem espera longa e com reposicao facil pela comanda.</span></article>
-        <article class="stack-card"><strong>Pedido sem fila</strong><span>Monte tudo pelo cardapio e envie para a equipe preparar.</span></article>
-      </div>
-    </section>
-
-    <section class="section" id="acesso" aria-labelledby="acessoTitle">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow" style="color: var(--brand-dark);">Minha comanda</span>
-          <h2 class="section-title" id="acessoTitle">Entre para pedir</h2>
-        </div>
-        <p class="section-copy">Crie sua comanda em poucos segundos. Assim a equipe sabe quem pediu, onde entregar e o que ja foi enviado.</p>
-      </div>
-      <div class="auth-grid">
-        <article class="auth-card">
-          <h3>Primeira vez no Toobar</h3>
-          <p>Abra uma comanda para a equipe encontrar sua mesa e seus pedidos.</p>
-          <form class="form" id="registerForm">
-            <div class="field"><label for="registerName">Nome</label><input id="registerName" autocomplete="name" placeholder="Ex.: Ana"></div>
-            <div class="field"><label for="registerEmail">Email</label><input id="registerEmail" type="email" autocomplete="email" placeholder="ana@email.com"></div>
-            <div class="field"><label for="registerPassword">Senha</label><input id="registerPassword" type="password" autocomplete="new-password" placeholder="Minimo 6 caracteres"></div>
-            <button class="button primary" type="submit">Abrir comanda</button>
-          </form>
-        </article>
-        <article class="auth-card">
-          <h3>Ja tenho comanda</h3>
-          <p>Volte para acompanhar seus pedidos e mandar mais uma rodada.</p>
-          <form class="form" id="loginForm">
-            <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" autocomplete="email" placeholder="ana@email.com"></div>
-            <div class="field"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Sua senha"></div>
-            <button class="button dark" type="submit">Continuar pedido</button>
-          </form>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" id="cardapio" aria-labelledby="cardapioTitle">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow" style="color: var(--brand-dark);">Menu da noite</span>
-          <h2 class="section-title" id="cardapioTitle">Escolha o seu pedido</h2>
-        </div>
-        <p class="section-copy">Filtre por categoria, adicione os itens favoritos e envie tudo em uma comanda so.</p>
-      </div>
-
-      <div class="menu-shell" id="pedidos">
-        <div>
-          <div class="tabs" role="tablist" aria-label="Categorias do cardapio">
-            <button class="tab active" data-category="todos" type="button">Todos</button>
-            <button class="tab" data-category="petiscos" type="button">Petiscos</button>
-            <button class="tab" data-category="pratos" type="button">Pratos</button>
-            <button class="tab" data-category="drinks" type="button">Drinks</button>
-            <button class="tab" data-category="bebidas" type="button">Bebidas</button>
+          <span class="eyebrow">Bar · Petiscos · Bons encontros</span>
+          <h1>Venha tomar <em>no Toobar.</em></h1>
+          <p class="hero-lead">Drinks bem feitos, porções caprichadas e uma comanda digital simples — peça da mesa sem perder a conversa.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#cardapio">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              Abrir cardápio
+            </a>
+            <a class="btn btn-gold" href="#acesso">Começar comanda</a>
           </div>
-          <div class="menu-grid" id="menuGrid"></div>
+          <div class="hero-meta" role="list">
+            <div role="listitem"><strong>20+</strong>itens no cardápio</div>
+            <div role="listitem"><strong>5min</strong>do clique à cozinha</div>
+            <div role="listitem"><strong>0</strong>filas no balcão</div>
+          </div>
+        </div>
+
+        <div class="hero-mock" aria-hidden="true">
+          <div class="mock-card">
+            <div class="mock-stamp">Mesa<br>08</div>
+            <div class="mock-head">
+              <strong>Comanda</strong>
+              <span>Toobar</span>
+            </div>
+            <div class="mock-row"><span>Negroni</span><span class="dots"></span><span class="price">R$ 32</span></div>
+            <div class="mock-row"><span>Bolinho de bacalhau</span><span class="dots"></span><span class="price">R$ 38</span></div>
+            <div class="mock-row"><span>Chopp pilsen</span><span class="dots"></span><span class="price">R$ 14</span></div>
+            <div class="mock-row"><span>Batata rústica</span><span class="dots"></span><span class="price">R$ 28</span></div>
+            <div class="mock-total">
+              <span>Total</span>
+              <strong>R$ 112,00</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EXPERIÊNCIA ============ -->
+    <section class="section reveal" id="experiencia" aria-labelledby="experienciaTitle">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow dark">A casa</span>
+          <h2 class="section-title" id="experienciaTitle">No ponto pra ficar mais um pouco.</h2>
+        </div>
+        <p class="section-copy">Um bar de clima quente, cozinha ligeira e cardápio direto ao ponto. Escolha, monte sua comanda e acompanhe seus pedidos.</p>
+      </div>
+      <div class="features">
+        <article class="feat">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11h18l-2 9H5z"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <strong>Petiscos de mesa</strong>
+          <span>Porções generosas, molhos da casa e receitas pensadas para dividir.</span>
+        </article>
+        <article class="feat">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2h8l-2 9H10z"/><path d="M12 11v9"/><path d="M8 22h8"/></svg></div>
+          <strong>Drinks autorais</strong>
+          <span>Clássicos bem executados e combinações frescas para abrir a noite.</span>
+        </article>
+        <article class="feat">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h14l-1 18H6z"/><path d="M5 7h14"/><circle cx="9" cy="14" r="1"/></svg></div>
+          <strong>Chopp gelado</strong>
+          <span>Caneca no ponto, sem espera longa, com reposição fácil pela comanda.</span>
+        </article>
+        <article class="feat">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <strong>Pedido sem fila</strong>
+          <span>Monte tudo pelo cardápio e envie para a equipe preparar — sem balcão.</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ CARDÁPIO ============ -->
+    <section class="section reveal" id="cardapio" aria-labelledby="cardapioTitle">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow dark">Menu da noite</span>
+          <h2 class="section-title" id="cardapioTitle">Escolha o seu pedido.</h2>
+        </div>
+        <p class="section-copy">Filtre por categoria, busque pelo nome e adicione direto à comanda. Tudo num lugar só.</p>
+      </div>
+
+      <div class="menu-wrap">
+        <div>
+          <div class="menu-toolbar">
+            <label class="search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input id="search" type="search" placeholder="Buscar negroni, chopp, bolinho…" aria-label="Buscar item">
+            </label>
+            <select class="sort" id="sort" aria-label="Ordenar">
+              <option value="default">Recomendados</option>
+              <option value="price-asc">Menor preço</option>
+              <option value="price-desc">Maior preço</option>
+              <option value="name">Nome A–Z</option>
+            </select>
+          </div>
+
+          <div class="tabs" role="tablist" aria-label="Categorias">
+            <button class="tab active" data-category="todos" role="tab" aria-selected="true" type="button">Todos <span class="tab-count" data-count="todos">0</span></button>
+            <button class="tab" data-category="petiscos" role="tab" aria-selected="false" type="button">Petiscos <span class="tab-count" data-count="petiscos">0</span></button>
+            <button class="tab" data-category="pratos" role="tab" aria-selected="false" type="button">Pratos <span class="tab-count" data-count="pratos">0</span></button>
+            <button class="tab" data-category="drinks" role="tab" aria-selected="false" type="button">Drinks <span class="tab-count" data-count="drinks">0</span></button>
+            <button class="tab" data-category="bebidas" role="tab" aria-selected="false" type="button">Bebidas <span class="tab-count" data-count="bebidas">0</span></button>
+          </div>
+
+          <div class="menu-grid" id="menuGrid" aria-live="polite"></div>
         </div>
 
         <aside class="order-panel" aria-label="Resumo do pedido">
           <div class="panel-head">
-            <h2>Seu pedido</h2>
-            <span>Entre, informe a mesa e mande para a cozinha.</span>
+            <h2>Sua comanda</h2>
+            <span id="cartSummary">Vazia · escolha algo do menu</span>
           </div>
-          <div class="cart" id="cart"></div>
+          <div class="cart-list" id="cart"></div>
           <form class="checkout" id="orderForm">
-            <div class="field"><label for="tableLabel">Mesa ou endereco</label><input id="tableLabel" placeholder="Ex.: Mesa 08"></div>
-            <div class="field"><label for="notes">Observacoes</label><textarea id="notes" placeholder="Ex.: sem cebola, gelo separado"></textarea></div>
+            <div class="field">
+              <label for="tableLabel">Mesa ou referência</label>
+              <input id="tableLabel" placeholder="Ex.: Mesa 08" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="notes">Observações</label>
+              <textarea id="notes" placeholder="Ex.: sem cebola, gelo separado"></textarea>
+            </div>
             <div class="total"><span>Total</span><strong id="total">R$ 0,00</strong></div>
-            <button class="button primary" type="submit">Enviar pedido</button>
+            <button class="btn btn-primary btn-block" type="submit" id="submitOrder">Enviar para a cozinha</button>
           </form>
         </aside>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="historicoTitle">
-      <div class="orders-panel">
-        <div class="section-head" style="margin-bottom: 0;">
-          <div>
-            <span class="eyebrow" style="color: var(--brand-dark);">Acompanhe</span>
-            <h2 class="section-title" id="historicoTitle">Minhas comandas</h2>
+    <!-- ============ ACESSO ============ -->
+    <section class="section reveal" id="acesso" aria-labelledby="acessoTitle">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow dark">Comanda</span>
+          <h2 class="section-title" id="acessoTitle">Entre pra mandar pedidos.</h2>
+        </div>
+        <p class="section-copy">Crie ou recupere sua comanda em segundos — assim a equipe sabe quem pediu, onde entregar e o que já saiu.</p>
+      </div>
+
+      <div class="auth-grid">
+        <article class="auth-card">
+          <div class="auth-tabs" role="tablist">
+            <button class="auth-tab active" data-pane="login" type="button" role="tab" aria-selected="true">Já tenho comanda</button>
+            <button class="auth-tab" data-pane="register" type="button" role="tab" aria-selected="false">Sou novo aqui</button>
           </div>
-          <button class="button dark" id="refreshOrders" type="button">Atualizar</button>
+
+          <div class="auth-pane active" data-pane="login">
+            <h3>Continuar pedido</h3>
+            <p class="sub">Volte para acompanhar seus pedidos e mandar mais uma rodada.</p>
+            <form class="auth-pane active" id="loginForm" style="grid-template-columns:1fr">
+              <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" autocomplete="email" placeholder="ana@email.com"></div>
+              <div class="field"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Sua senha"></div>
+              <button class="btn btn-dark btn-block" type="submit">Entrar</button>
+            </form>
+          </div>
+
+          <div class="auth-pane" data-pane="register">
+            <h3>Primeira vez no Toobar</h3>
+            <p class="sub">Abra uma comanda em poucos segundos e pronto pra pedir.</p>
+            <form id="registerForm" style="display:grid;gap:14px">
+              <div class="field"><label for="registerName">Nome</label><input id="registerName" autocomplete="name" placeholder="Ex.: Ana"></div>
+              <div class="field"><label for="registerEmail">Email</label><input id="registerEmail" type="email" autocomplete="email" placeholder="ana@email.com"></div>
+              <div class="field"><label for="registerPassword">Senha</label><input id="registerPassword" type="password" autocomplete="new-password" placeholder="Mínimo 6 caracteres"></div>
+              <button class="btn btn-primary btn-block" type="submit">Abrir comanda</button>
+            </form>
+          </div>
+        </article>
+
+        <aside class="auth-side">
+          <span class="eyebrow" style="color:var(--gold-soft)">Por que entrar?</span>
+          <h3>Sua mesa, do jeito que você gosta.</h3>
+          <p>A comanda guarda tudo o que rola na mesa — e te poupa do balcão.</p>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Pedidos enviados direto pra cozinha</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Histórico de tudo que você pediu</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Comanda persistente por 7 dias</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Senha protegida, dados locais</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ HISTÓRICO ============ -->
+    <section class="section reveal" id="historico" aria-labelledby="historicoTitle">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow dark">Acompanhe</span>
+          <h2 class="section-title" id="historicoTitle">Minhas comandas.</h2>
         </div>
-        <div class="orders-list" id="ordersList">
-          <p class="empty">Entre para ver suas comandas.</p>
-        </div>
+        <button class="btn btn-soft" id="refreshOrders" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/></svg>
+          Atualizar
+        </button>
+      </div>
+      <div class="orders-list" id="ordersList">
+        <p class="empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11h6M9 15h4M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 8a2 2 0 0 1 2-2h7l5 5v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/></svg>
+          Entre na sua comanda para ver os pedidos.
+        </p>
       </div>
     </section>
   </main>
 
-  <footer class="footer">Toobar - feito para mesa cheia, chopp gelado e pedido sem fila.</footer>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <h4>Toobar</h4>
+        <p>Bar de bairro com cardápio digital. Mesa cheia, chopp gelado e pedido sem fila.</p>
+      </div>
+      <div>
+        <h4>Visitar</h4>
+        <ul>
+          <li>Quarta — domingo</li>
+          <li>17h às 00h</li>
+          <li>Rua das Caneca, 22</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Cardápio</h4>
+        <ul>
+          <li><a href="#cardapio">Petiscos</a></li>
+          <li><a href="#cardapio">Drinks</a></li>
+          <li><a href="#cardapio">Pratos</a></li>
+          <li><a href="#cardapio">Bebidas</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <ul>
+          <li><a href="tel:+5500000000000">(00) 0000-0000</a></li>
+          <li><a href="mailto:oi@toobar.local">oi@toobar.local</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© Toobar · Sistema local rodando em 127.0.0.1</span>
+      <span>Feito sem nuvem, sem fila, sem fricção.</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <svg id="toastIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+    <span id="toastText"></span>
+  </div>
 
   <script>
+    /* ===========================================================
+       TOOBAR — frontend
+       =========================================================== */
     const state = {
       user: null,
       category: "todos",
       menu: [],
-      cart: new Map()
+      menuAll: [],
+      cart: new Map(),
+      search: "",
+      sort: "default",
     };
 
-    const formatter = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-    const menuGrid = document.querySelector("#menuGrid");
-    const cart = document.querySelector("#cart");
-    const total = document.querySelector("#total");
-    const toast = document.querySelector("#toast");
-    const sessionName = document.querySelector("#sessionName");
-    const logoutButton = document.querySelector("#logoutButton");
-    const ordersList = document.querySelector("#ordersList");
+    const fmt = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
+    const $ = (sel) => document.querySelector(sel);
+    const menuGrid = $("#menuGrid");
+    const cartEl = $("#cart");
+    const totalEl = $("#total");
+    const cartSummary = $("#cartSummary");
+    const cartBadge = $("#cartBadge");
+    const toast = $("#toast");
+    const toastText = $("#toastText");
+    const toastIcon = $("#toastIcon");
+    const sessionName = $("#sessionName");
+    const logoutButton = $("#logoutButton");
+    const ordersList = $("#ordersList");
+
+    /* ---------- API ---------- */
     async function api(path, options = {}) {
-      const response = await fetch(path, {
+      const res = await fetch(path, {
         credentials: "same-origin",
         headers: { "Content-Type": "application/json", ...(options.headers || {}) },
         ...options
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Erro inesperado.");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Erro inesperado.");
       return data;
     }
 
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add("show");
-      window.clearTimeout(showToast.timer);
-      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 3200);
+    /* ---------- TOAST ---------- */
+    const TOAST_ICONS = {
+      success: '<circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/>',
+      error:   '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+      info:    '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+    };
+    function showToast(message, kind = "info") {
+      toastText.textContent = message;
+      toast.className = "toast show " + kind;
+      toastIcon.innerHTML = TOAST_ICONS[kind] || TOAST_ICONS.info;
+      clearTimeout(showToast.t);
+      showToast.t = setTimeout(() => toast.classList.remove("show"), 3500);
     }
 
+    /* ---------- THEME ---------- */
+    const themeBtn = $("#themeToggle");
+    const iconSun = $("#iconSun");
+    const iconMoon = $("#iconMoon");
+    function applyTheme(t) {
+      document.documentElement.dataset.theme = t;
+      iconSun.style.display = t === "dark" ? "none" : "block";
+      iconMoon.style.display = t === "dark" ? "block" : "none";
+      try { localStorage.setItem("toobar-theme", t); } catch (_) {}
+    }
+    themeBtn.addEventListener("click", () => {
+      applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+    });
+    try {
+      const saved = localStorage.getItem("toobar-theme");
+      if (saved) applyTheme(saved);
+      else if (matchMedia("(prefers-color-scheme: dark)").matches) applyTheme("dark");
+    } catch (_) {}
+
+    /* ---------- SESSION ---------- */
     function renderSession() {
       sessionName.textContent = state.user ? state.user.name : "Sem comanda";
       logoutButton.hidden = !state.user;
     }
-
     async function loadSession() {
-      const data = await api("/api/me");
-      state.user = data.user;
+      try {
+        const data = await api("/api/me");
+        state.user = data.user;
+      } catch (_) { state.user = null; }
       renderSession();
       await loadOrders();
     }
 
+    /* ---------- MENU ---------- */
+    function categoryOf(item) {
+      return (item.category || "").toLowerCase();
+    }
+    function filterMenu() {
+      let list = state.menuAll.slice();
+      if (state.category !== "todos") list = list.filter((i) => categoryOf(i) === state.category);
+      if (state.search) {
+        const q = state.search.toLowerCase();
+        list = list.filter((i) => (i.name + " " + (i.description || "")).toLowerCase().includes(q));
+      }
+      switch (state.sort) {
+        case "price-asc":  list.sort((a, b) => a.price - b.price); break;
+        case "price-desc": list.sort((a, b) => b.price - a.price); break;
+        case "name":       list.sort((a, b) => a.name.localeCompare(b.name, "pt-BR")); break;
+      }
+      state.menu = list;
+    }
     async function loadMenu() {
-      const query = state.category === "todos" ? "" : `?category=${encodeURIComponent(state.category)}`;
-      const data = await api(`/api/menu${query}`);
-      state.menu = data.items;
+      menuGrid.innerHTML = Array.from({ length: 4 }).map(() => '<div class="skeleton skel-card"></div>').join("");
+      try {
+        const data = await api("/api/menu");
+        state.menuAll = data.items || [];
+      } catch (e) {
+        state.menuAll = [];
+        showToast("Não consegui carregar o cardápio.", "error");
+      }
+      updateCounts();
+      filterMenu();
       renderMenu();
+    }
+    function updateCounts() {
+      const counts = { todos: state.menuAll.length };
+      state.menuAll.forEach((i) => {
+        const c = categoryOf(i);
+        counts[c] = (counts[c] || 0) + 1;
+      });
+      document.querySelectorAll(".tab-count").forEach((el) => {
+        const k = el.dataset.count;
+        el.textContent = counts[k] || 0;
+      });
+    }
+
+    function tagsFor(item) {
+      const tags = [];
+      const cat = categoryOf(item);
+      if (cat === "drinks")   tags.push('<span class="tag gold">Drink</span>');
+      if (cat === "petiscos") tags.push('<span class="tag">Pra dividir</span>');
+      if (cat === "pratos")   tags.push('<span class="tag mint">Prato</span>');
+      return tags.join("");
     }
 
     function renderMenu() {
       if (!state.menu.length) {
-        menuGrid.innerHTML = '<p class="empty">Nenhum item encontrado.</p>';
+        menuGrid.innerHTML = `
+          <div class="empty" style="grid-column:1/-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Nada por aqui. Tenta outra busca ou outra categoria.
+          </div>`;
         return;
       }
-
-      menuGrid.innerHTML = state.menu.map((item) => `
-        <article class="item">
-          <img src="${item.image_url}" alt="${item.name}">
-          <div>
-            <h3>${item.name}</h3>
-            <p>${item.description}</p>
-            <div class="item-footer">
-              <span class="price">${formatter.format(item.price)}</span>
-              <button class="add" type="button" data-id="${item.id}" aria-label="Adicionar ${item.name}">+</button>
+      menuGrid.innerHTML = state.menu.map((item) => {
+        const inCart = state.cart.get(item.id);
+        const stepper = inCart
+          ? `<div class="stepper">
+               <button class="step-btn" type="button" data-decrease="${item.id}" aria-label="Tirar um">−</button>
+               <span class="step-qty">${inCart.qty}</span>
+               <button class="step-btn add" type="button" data-id="${item.id}" aria-label="Adicionar mais">+</button>
+             </div>`
+          : `<button class="step-btn add" type="button" data-id="${item.id}" aria-label="Adicionar ${item.name} ao pedido">+</button>`;
+        return `
+          <article class="item">
+            <div class="item-media">
+              <img src="${item.image_url}" alt="${item.name}" loading="lazy">
+              <div class="item-tags">${tagsFor(item)}</div>
             </div>
-          </div>
-        </article>
-      `).join("");
+            <div class="item-body">
+              <h3>${item.name}</h3>
+              <p>${item.description || ""}</p>
+              <div class="item-footer">
+                <span class="price"><small>R$</small>${(item.price).toFixed(2).replace(".", ",")}</span>
+                ${stepper}
+              </div>
+            </div>
+          </article>`;
+      }).join("");
     }
 
+    /* ---------- CART ---------- */
     function renderCart() {
+      const totalQty = Array.from(state.cart.values()).reduce((s, x) => s + x.qty, 0);
+      cartBadge.textContent = totalQty;
+      cartBadge.classList.toggle("show", totalQty > 0);
+
       if (state.cart.size === 0) {
-        cart.innerHTML = '<p class="empty">Seu pedido ainda esta vazio.</p>';
-        total.textContent = formatter.format(0);
+        cartEl.innerHTML = `<div class="empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          Comanda vazia. Adicione um item.</div>`;
+        totalEl.textContent = fmt.format(0);
+        cartSummary.textContent = "Vazia · escolha algo do menu";
         return;
       }
-
       let sum = 0;
-      cart.innerHTML = Array.from(state.cart.values()).map(({ item, qty }) => {
+      cartEl.innerHTML = Array.from(state.cart.values()).map(({ item, qty }) => {
         sum += item.price * qty;
         return `
           <div class="cart-row">
             <div>
-              <strong>${item.name}</strong>
-              <span>${formatter.format(item.price)} cada</span>
+              <div class="name">${item.name}</div>
+              <div class="meta">
+                <span>${fmt.format(item.price)}</span>
+                <button type="button" class="remove" data-remove="${item.id}">remover</button>
+              </div>
             </div>
-            <div class="qty">
-              <button type="button" data-decrease="${item.id}">-</button>
-              <strong>${qty}</strong>
-              <button type="button" data-increase="${item.id}">+</button>
+            <div class="cart-qty">
+              <button type="button" data-decrease="${item.id}" aria-label="Tirar um">−</button>
+              <span>${qty}</span>
+              <button type="button" data-increase="${item.id}" aria-label="Adicionar um">+</button>
             </div>
-          </div>
-        `;
+          </div>`;
       }).join("");
-      total.textContent = formatter.format(sum);
+      totalEl.textContent = fmt.format(sum);
+      cartSummary.textContent = `${totalQty} ${totalQty === 1 ? "item" : "itens"} · ${fmt.format(sum)}`;
     }
-
-    async function loadOrders() {
-      if (!state.user) {
-        ordersList.innerHTML = '<p class="empty">Entre para ver suas comandas.</p>';
-        return;
-      }
-
-      const data = await api("/api/orders");
-      if (!data.orders.length) {
-        ordersList.innerHTML = '<p class="empty">Sua comanda ainda esta limpa. Escolha algo do cardapio.</p>';
-        return;
-      }
-
-      ordersList.innerHTML = data.orders.map((order) => `
-        <article class="order-card">
-          <strong><span>Pedido #${order.id}</span><span>${formatter.format(order.total)}</span></strong>
-          <span>${order.table_label} - ${order.status}</span>
-          <ul>${order.items.map((item) => `<li>${item.quantity}x ${item.name}</li>`).join("")}</ul>
-        </article>
-      `).join("");
-    }
-
-    document.querySelector(".tabs").addEventListener("click", async (event) => {
-      const button = event.target.closest(".tab");
-      if (!button) return;
-      state.category = button.dataset.category;
-      document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
-      button.classList.add("active");
-      await loadMenu();
-    });
-
-    menuGrid.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-id]");
-      if (!button) return;
-      const id = Number(button.dataset.id);
-      const item = state.menu.find((entry) => entry.id === id);
-      const current = state.cart.get(id);
-      state.cart.set(id, { item, qty: current ? current.qty + 1 : 1 });
-      renderCart();
-      showToast(`${item.name} adicionado ao pedido.`);
-    });
-
-    cart.addEventListener("click", (event) => {
-      const increase = event.target.closest("[data-increase]");
-      const decrease = event.target.closest("[data-decrease]");
-      const id = Number(increase?.dataset.increase || decrease?.dataset.decrease || 0);
-      if (!id) return;
-      const current = state.cart.get(id);
-      if (!current) return;
-      if (increase) current.qty += 1;
-      else if (current.qty > 1) current.qty -= 1;
+    function modifyCart(id, delta) {
+      const item = state.menuAll.find((e) => e.id === id);
+      const cur = state.cart.get(id);
+      if (delta > 0) state.cart.set(id, { item, qty: (cur ? cur.qty : 0) + 1 });
+      else if (cur && cur.qty > 1) state.cart.set(id, { item, qty: cur.qty - 1 });
       else state.cart.delete(id);
       renderCart();
+      renderMenu();
+    }
+
+    /* ---------- ORDERS ---------- */
+    function statusClass(s) {
+      const t = (s || "").toLowerCase();
+      if (t.includes("prepar")) return "preparing";
+      if (t.includes("entreg") || t.includes("conclu") || t.includes("fech")) return "done";
+      return "open";
+    }
+    async function loadOrders() {
+      if (!state.user) {
+        ordersList.innerHTML = `<p class="empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8a2 2 0 0 1 2-2h7l5 5v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/></svg>
+          Entre na sua comanda para ver os pedidos.</p>`;
+        return;
+      }
+      try {
+        const data = await api("/api/orders");
+        if (!data.orders.length) {
+          ordersList.innerHTML = `<p class="empty">Nenhum pedido ainda. Hora de escolher algo do menu.</p>`;
+          return;
+        }
+        ordersList.innerHTML = data.orders.map((o) => `
+          <article class="order-card">
+            <div class="order-head">
+              <span class="id">Pedido #${o.id}</span>
+              <span class="total-val">${fmt.format(o.total)}</span>
+            </div>
+            <div class="order-meta">
+              <span><strong>${o.table_label || "—"}</strong></span>
+              <span class="status-pill ${statusClass(o.status)}">${o.status}</span>
+            </div>
+            <ul>${o.items.map((it) => `<li>${it.quantity}× ${it.name}</li>`).join("")}</ul>
+          </article>
+        `).join("");
+      } catch (e) {
+        showToast("Não consegui carregar os pedidos.", "error");
+      }
+    }
+
+    /* ---------- EVENTS ---------- */
+    document.querySelector(".tabs").addEventListener("click", (e) => {
+      const btn = e.target.closest(".tab");
+      if (!btn) return;
+      state.category = btn.dataset.category;
+      document.querySelectorAll(".tab").forEach((t) => {
+        t.classList.toggle("active", t === btn);
+        t.setAttribute("aria-selected", t === btn ? "true" : "false");
+      });
+      filterMenu(); renderMenu();
     });
 
-    document.querySelector("#registerForm").addEventListener("submit", async (event) => {
-      event.preventDefault();
+    $("#search").addEventListener("input", (e) => {
+      state.search = e.target.value.trim();
+      filterMenu(); renderMenu();
+    });
+    $("#sort").addEventListener("change", (e) => {
+      state.sort = e.target.value;
+      filterMenu(); renderMenu();
+    });
+
+    menuGrid.addEventListener("click", (e) => {
+      const add = e.target.closest("[data-id]");
+      const dec = e.target.closest("[data-decrease]");
+      if (add)      modifyCart(Number(add.dataset.id), +1);
+      else if (dec) modifyCart(Number(dec.dataset.decrease), -1);
+    });
+
+    cartEl.addEventListener("click", (e) => {
+      const inc = e.target.closest("[data-increase]");
+      const dec = e.target.closest("[data-decrease]");
+      const rm  = e.target.closest("[data-remove]");
+      if (inc) modifyCart(Number(inc.dataset.increase), +1);
+      else if (dec) modifyCart(Number(dec.dataset.decrease), -1);
+      else if (rm) {
+        state.cart.delete(Number(rm.dataset.remove));
+        renderCart(); renderMenu();
+      }
+    });
+
+    $("#cartBtn").addEventListener("click", () => {
+      document.querySelector(".order-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    /* auth tabs */
+    document.querySelectorAll(".auth-tab").forEach((t) => {
+      t.addEventListener("click", () => {
+        const target = t.dataset.pane;
+        document.querySelectorAll(".auth-tab").forEach((x) => {
+          x.classList.toggle("active", x === t);
+          x.setAttribute("aria-selected", x === t ? "true" : "false");
+        });
+        document.querySelectorAll(".auth-pane").forEach((p) => p.classList.toggle("active", p.dataset.pane === target));
+      });
+    });
+
+    $("#registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
       try {
         const data = await api("/api/auth/register", {
           method: "POST",
           body: JSON.stringify({
-            name: document.querySelector("#registerName").value,
-            email: document.querySelector("#registerEmail").value,
-            password: document.querySelector("#registerPassword").value
+            name: $("#registerName").value,
+            email: $("#registerEmail").value,
+            password: $("#registerPassword").value
           })
         });
         state.user = data.user;
         renderSession();
-        event.currentTarget.reset();
-        showToast("Comanda aberta. Agora e so escolher.");
+        e.currentTarget.reset();
+        showToast("Comanda aberta. Manda ver no menu.", "success");
         await loadOrders();
-      } catch (error) {
-        showToast(error.message);
-      }
+      } catch (err) { showToast(err.message, "error"); }
     });
 
-    document.querySelector("#loginForm").addEventListener("submit", async (event) => {
-      event.preventDefault();
+    $("#loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
       try {
         const data = await api("/api/auth/login", {
           method: "POST",
-          body: JSON.stringify({
-            email: document.querySelector("#loginEmail").value,
-            password: document.querySelector("#loginPassword").value
-          })
+          body: JSON.stringify({ email: $("#loginEmail").value, password: $("#loginPassword").value })
         });
         state.user = data.user;
         renderSession();
-        event.currentTarget.reset();
-        showToast("Comanda recuperada.");
+        e.currentTarget.reset();
+        showToast("Comanda recuperada.", "success");
         await loadOrders();
-      } catch (error) {
-        showToast(error.message);
-      }
+      } catch (err) { showToast(err.message, "error"); }
     });
 
     logoutButton.addEventListener("click", async () => {
-      await api("/api/auth/logout", { method: "POST", body: "{}" });
+      try { await api("/api/auth/logout", { method: "POST", body: "{}" }); } catch (_) {}
       state.user = null;
       renderSession();
       await loadOrders();
-      showToast("Sessao encerrada.");
+      showToast("Sessão encerrada.", "info");
     });
 
-    document.querySelector("#orderForm").addEventListener("submit", async (event) => {
-      event.preventDefault();
+    $("#orderForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
       if (!state.user) {
-        showToast("Entre ou crie uma conta antes de enviar.");
-        document.querySelector("#acesso").scrollIntoView({ behavior: "smooth" });
+        showToast("Entre ou cadastre antes de enviar.", "info");
+        $("#acesso").scrollIntoView({ behavior: "smooth" });
         return;
       }
       if (state.cart.size === 0) {
-        showToast("Adicione pelo menos um item antes de enviar.");
+        showToast("Adicione pelo menos um item.", "info");
         return;
       }
-
+      const btn = $("#submitOrder");
+      btn.disabled = true; btn.textContent = "Enviando…";
       try {
         await api("/api/orders", {
           method: "POST",
           body: JSON.stringify({
-            table_label: document.querySelector("#tableLabel").value,
-            notes: document.querySelector("#notes").value,
-            items: Array.from(state.cart.values()).map(({ item, qty }) => ({
-              menu_item_id: item.id,
-              quantity: qty
-            }))
+            table_label: $("#tableLabel").value,
+            notes: $("#notes").value,
+            items: Array.from(state.cart.values()).map(({ item, qty }) => ({ menu_item_id: item.id, quantity: qty }))
           })
         });
         state.cart.clear();
-        renderCart();
-        event.currentTarget.reset();
+        renderCart(); renderMenu();
+        e.currentTarget.reset();
         await loadOrders();
-        showToast("Pedido enviado para a equipe.");
-      } catch (error) {
-        showToast(error.message);
+        showToast("Pedido enviado pra cozinha 🔥", "success");
+      } catch (err) {
+        showToast(err.message, "error");
+      } finally {
+        btn.disabled = false; btn.textContent = "Enviar para a cozinha";
       }
     });
 
-    document.querySelector("#refreshOrders").addEventListener("click", () => {
-      loadOrders().catch((error) => showToast(error.message));
-    });
+    $("#refreshOrders").addEventListener("click", () => loadOrders());
 
-    async function start() {
+    /* ---------- REVEAL ---------- */
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+      }, { threshold: .12 });
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+    } else {
+      document.querySelectorAll(".reveal").forEach((el) => el.classList.add("in"));
+    }
+
+    /* ---------- BOOT ---------- */
+    (async function start() {
       renderCart();
       try {
         await loadSession();
         await loadMenu();
-      } catch (error) {
-        showToast("Abra pelo endereco local do Toobar.");
+      } catch (e) {
+        showToast("Abra pelo endereço local do Toobar.", "error");
       }
-    }
-
-    start();
+    })();
   </script>
 </body>
 </html>
